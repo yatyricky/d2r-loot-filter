@@ -1,0 +1,27 @@
+{
+  "name": "d2r-loot-filter",
+  "version": "1.0.0",
+  "description": "This is a mod for D2R that makes it easier to quickly discern which items you would want to pick up, essentially implementing a pseudo loot filter.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yatyricky/d2r-loot-filter.git"
+  },
+  "keywords": [
+    "d2r",
+    "mod",
+    "loot-filter"
+  ],
+  "author": "Nef.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yatyricky/d2r-loot-filter/issues"
+  },
+  "homepage": "https://github.com/yatyricky/d2r-loot-filter#readme",
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
