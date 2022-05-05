@@ -62,7 +62,7 @@ function stringNull(str) {
     return str === undefined || str === null || str.length === 0
 }
 
-function editClone(nameEnUS, key, color, rename) {
+function editClone(nameEnUS, key, color, rename, level) {
     if (stringNull(nameEnUS)) {
         return
     }
@@ -77,19 +77,31 @@ function editClone(nameEnUS, key, color, rename) {
         let name = entry.enUS
         if (!stringNull(rename)) {
             name = rename
+        } else {
+            if (!stringNull(level)) {
+                name += level
+            }
         }
+
         if (!stringNull(color)) {
-            name = color + name
+            if (stringNull(level)) {
+                // trash
+                name = color + name
+            } else {
+                // gears
+                name = "@" + color + name
+            }
         }
+
         entry.enUS = name
     }
 }
 
 let editWs = xu.sheet_to_json(wb.Sheets["item-names-edit"])
 for (const row of editWs) {
-    editClone(row.Normal, row.Key1, row.Color1, row.Rename1)
-    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2)
-    editClone(row.Elite, row.Key3, row.Color3, row.Rename3)
+    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, "(N)")
+    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, "(X)")
+    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, "(E)")
     editClone(row.Special, row.Key4, row.Color4, row.Rename4)
 }
 
@@ -144,12 +156,13 @@ if (fs.existsSync(modsDir)) {
 const modPath = path.join(modsDir, "lootfilter")
 if (fs.existsSync(modPath)) {
     if (fs.statSync(modPath).isDirectory()) {
-        fs.rmdirSync(modPath, {
+        fs.rmSync(modPath, {
             recursive: true
         })
+        fs.mkdirSync(modPath)
     } else {
         throw new Error(`Path is not directory ${modPath}`)
     }
 }
 
-fse.copy(path.join(__dirname, "lootfilter"), modsDir)
+fse.copy(path.join(__dirname, "lootfilter"), modPath)
