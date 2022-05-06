@@ -11,6 +11,26 @@ const fp_item_name_affixes = "lootfilter/lootfilter.mpq/Data/local/lng/strings/i
 const sheetNameItemNames = "item-names"
 const sheetNameItemNameAffixes = "item-nameaffixes"
 
+let allowedCodes = ["enUS", "zhTW", "deDE", "esES", "frFR", "itIT", "koKR", "plPL", "esMX", "jaJP", "ptBR", "ruRU", "zhCN"]
+
+let targetLangs = []
+
+if (process.argv.length > 2) {
+    for (let i = 2; i < process.argv.length; i++) {
+        let lang = process.argv[i]
+        if (allowedCodes.includes(lang)) {
+            targetLangs.push(lang)
+        } else {
+            console.log(`[ERR] Unknown lang ${lang}. Expected ${allowedCodes.join("|")}`)
+            process.exit(1)
+        }
+    }
+}
+
+if (targetLangs.length === 0) {
+    targetLangs.push("enUS")
+}
+
 let wb = xlsx.readFile(fp_base_xlsx)
 let itemNames = xu.sheet_to_json(wb.Sheets[sheetNameItemNames])
 let itemNameAffixes = xu.sheet_to_json(wb.Sheets[sheetNameItemNameAffixes])
@@ -41,9 +61,10 @@ for (const e of arr) {
 function findByEnUS(enUS) {
     let res = arr.filter(e => e.enUS == enUS)
     if (res.length === 0) {
-        throw new Error(`unable to find enUS ${enUS}`)
+        console.log(`[ERR] Unable to find enUS ${enUS}`)
+        process.exit(1)
     } else if (res.length > 1) {
-        console.log(`Warning: multiple items has the same enUS name: ${enUS} >> ${res.map(e => `${e.Key}@${e.sheet}`).join(",")}`)
+        console.log(`[WARN] Multiple items has the same enUS name: ${enUS} >> ${res.map(e => `${e.Key}@${e.sheet}`).join(",")}`)
     }
     return res
 }
@@ -51,9 +72,10 @@ function findByEnUS(enUS) {
 function findByKey(key) {
     let res = arr.filter(e => e.Key == key)
     if (res.length === 0) {
-        throw new Error(`unable to find key ${key}`)
+        console.log(`[ERR] Unable to find key ${key}`)
+        process.exit(1)
     } else if (res.length > 1) {
-        console.log(`Warning: multiple items has the same key: ${key} >> ${res.map(e => `${e.id}@${e.sheet}`).join(",")}`)
+        console.log(`[WARN] Multiple items has the same key: ${key} >> ${res.map(e => `${e.id}@${e.sheet}`).join(",")}`)
     }
     return res
 }
@@ -74,34 +96,36 @@ function editClone(nameEnUS, key, color, rename, level) {
     }
 
     for (const entry of entries) {
-        let name = entry.enUS
-        if (!stringNull(rename)) {
-            name = rename
-        } else {
-            if (!stringNull(level)) {
-                name += level
-            }
-        }
-
-        if (!stringNull(color)) {
-            if (stringNull(level)) {
-                // trash
-                name = color + name
+        for (const lang of targetLangs) {
+            let name = entry[lang]
+            if (!stringNull(rename)) {
+                name = rename
             } else {
-                // gears
-                name = "@" + color + name
+                if (!stringNull(level)) {
+                    name += level
+                }
             }
-        }
 
-        entry.enUS = name
+            if (!stringNull(color)) {
+                if (stringNull(level)) {
+                    // trash
+                    name = color + name
+                } else {
+                    // gears
+                    name = "O" + color + name
+                }
+            }
+
+            entry[lang] = name
+        }
     }
 }
 
 let editWs = xu.sheet_to_json(wb.Sheets["item-names-edit"])
 for (const row of editWs) {
-    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, "(N)")
-    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, "(X)")
-    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, "(E)")
+    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, "|N")
+    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, "|X")
+    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, "|E")
     editClone(row.Special, row.Key4, row.Color4, row.Rename4)
 }
 
@@ -124,6 +148,8 @@ fs.writeFileSync(fp_item_names, Buffer.concat([bom, bufferItemNames]))
 let bufferItemNameAffixes = Buffer.from(JSON.stringify(itemNameAffixes, null, 2) + "\n")
 fs.writeFileSync(fp_item_name_affixes, Buffer.concat([bom, bufferItemNameAffixes]))
 
+console.log(`[OK] Write json success. Changes langs: ${targetLangs.join(",")}.`)
+
 // deploy
 
 const pathD2RPath = path.join(__dirname, "your-d2r-full-path.txt")
@@ -135,19 +161,20 @@ if (fs.existsSync(pathD2RPath)) {
 }
 
 if (stringNull(d2rPath)) {
-    console.log("Please enter your d2r path here: " + pathD2RPath)
+    console.log("[ERR] Please enter your d2r path here: " + pathD2RPath)
     process.exit(1)
 }
 
 if (!fs.existsSync(d2rPath) || !fs.statSync(d2rPath).isDirectory()) {
-    console.log(`Directory not valid ${d2rPath}`)
+    console.log(`[ERR] Directory not valid ${d2rPath}`)
     process.exit(1)
 }
 
 const modsDir = path.join(d2rPath, "mods")
 if (fs.existsSync(modsDir)) {
     if (fs.statSync(modsDir).isFile()) {
-        throw new Error(`Path is not directory ${modsDir}`)
+        console.log(`[ERR] Path is not directory ${modsDir}`)
+        process.exit(1)
     }
 } else {
     fs.mkdirSync(modsDir)
@@ -161,8 +188,11 @@ if (fs.existsSync(modPath)) {
         })
         fs.mkdirSync(modPath)
     } else {
-        throw new Error(`Path is not directory ${modPath}`)
+        console.log(`[ERR] Path is not directory ${modPath}`)
+        process.exit(1)
     }
 }
 
 fse.copy(path.join(__dirname, "lootfilter"), modPath)
+
+console.log("[OK] Deploy mod success. Now add '-mod lootfilter -txt' to your launch options and enjoy.")
