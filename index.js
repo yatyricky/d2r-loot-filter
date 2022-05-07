@@ -4,34 +4,56 @@ const path = require("path")
 const fse = require("fs-extra")
 let xu = xlsx.utils
 
+function stringNull(str) {
+    return str === undefined || str === null || str.length === 0
+}
+
+function stringDefault(str, defaultValue) {
+    if (stringNull(str)) {
+        return defaultValue
+    } else {
+        return str
+    }
+}
+
 const fp_base_xlsx = "base.xlsx"
 const fp_item_names = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-names.json"
 const fp_item_name_affixes = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-nameaffixes.json"
 
 const sheetNameItemNames = "item-names"
 const sheetNameItemNameAffixes = "item-nameaffixes"
+const sheetSettings = "settings"
+
+let wb = xlsx.readFile(fp_base_xlsx)
+
+// parse settings
+
+let settingsRaw = xu.sheet_to_json(wb.Sheets[sheetSettings])
+let settings = {}
+for (const setting of settingsRaw) {
+    settings[setting.Property] = setting.Value
+}
+let targetLanguages = stringDefault(settings["Target Languages"], "enUS")
+let normalItemSuffix = stringDefault(settings["Normal Item Suffix"], "N")
+let exceptionalItemSuffix = stringDefault(settings["Exceptional Item Suffix"], "X")
+let eliteItemSuffix = stringDefault(settings["Elite Item Suffix"], "E")
+let itemPrefix = stringDefault(settings["Item Prefix"], "")
+
+// target lang
 
 let allowedCodes = ["enUS", "zhTW", "deDE", "esES", "frFR", "itIT", "koKR", "plPL", "esMX", "jaJP", "ptBR", "ruRU", "zhCN"]
 
 let targetLangs = []
 
-if (process.argv.length > 2) {
-    for (let i = 2; i < process.argv.length; i++) {
-        let lang = process.argv[i]
-        if (allowedCodes.includes(lang)) {
-            targetLangs.push(lang)
-        } else {
-            console.log(`[ERR] Unknown lang ${lang}. Expected ${allowedCodes.join("|")}`)
-            process.exit(1)
-        }
+for (const lang of targetLanguages.split(",")) {
+    if (allowedCodes.includes(lang)) {
+        targetLangs.push(lang)
+    } else {
+        console.log(`[ERR] Unknown lang ${lang}. Expected ${allowedCodes.join("|")}`)
+        process.exit(1)
     }
 }
 
-if (targetLangs.length === 0) {
-    targetLangs.push("enUS")
-}
-
-let wb = xlsx.readFile(fp_base_xlsx)
 let itemNames = xu.sheet_to_json(wb.Sheets[sheetNameItemNames])
 let itemNameAffixes = xu.sheet_to_json(wb.Sheets[sheetNameItemNameAffixes])
 
@@ -80,10 +102,6 @@ function findByKey(key) {
     return res
 }
 
-function stringNull(str) {
-    return str === undefined || str === null || str.length === 0
-}
-
 function editClone(nameEnUS, key, color, rename, level) {
     if (stringNull(nameEnUS)) {
         return
@@ -95,27 +113,24 @@ function editClone(nameEnUS, key, color, rename, level) {
         entries = findByEnUS(nameEnUS)
     }
 
+    color = color || ""
+    rename = rename || ""
+    level = level || ""
+    let prefix = itemPrefix
     for (const entry of entries) {
         for (const lang of targetLangs) {
             let name = entry[lang]
+
             if (!stringNull(rename)) {
                 name = rename
-            } else {
-                if (!stringNull(level)) {
-                    name += level
-                }
+                prefix = ""
             }
 
-            if (!stringNull(color)) {
-                if (stringNull(level)) {
-                    // trash
-                    name = color + name
-                } else {
-                    // gears
-                    name = "O" + color + name
-                }
+            if (stringNull(color)) {
+                prefix = ""
             }
 
+            name = prefix + color + name + level
             entry[lang] = name
         }
     }
@@ -123,9 +138,9 @@ function editClone(nameEnUS, key, color, rename, level) {
 
 let editWs = xu.sheet_to_json(wb.Sheets["item-names-edit"])
 for (const row of editWs) {
-    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, "|N")
-    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, "|X")
-    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, "|E")
+    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, normalItemSuffix)
+    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, exceptionalItemSuffix)
+    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, eliteItemSuffix)
     editClone(row.Special, row.Key4, row.Color4, row.Rename4)
 }
 

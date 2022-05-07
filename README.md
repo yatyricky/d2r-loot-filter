@@ -4,11 +4,18 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
 # Installation
 
+## Option 1: Command line
+
 1. Install nodejs https://nodejs.org/en/
 2. CD to root of this repo
 3. Create a file named `your-d2r-full-path.txt` under the root, enter your full d2r installation path and save. e.g. C:/Users/yatyr/Games/Diablo II Resurrected
 4. `node index`
 5. enjoy
+
+## Option 2: Copy and Paste
+
+1. Download the latest release
+2. Copy the files as instructed in the original repo https://github.com/AlexisEvo/d2r-loot-filter
 
 # Customization
 
