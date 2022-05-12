@@ -29,6 +29,14 @@ This sheet is basically a 1:1 spreadsheet representation of D2R `item-names.json
 
 This sheet is basically a 1:1 spreadsheet representation of D2R `item-nameaffixes.json` file.
 
+## settings
+
+- Target Languages: The languages the mod will apply to. Options are enUS|zhTW|deDE|esES|frFR|itIT|koKR|plPL|esMX|jaJP|ptBR|ruRU|zhCN. Defaults to enUS
+- Normal Item Suffix: Affects on column A, defaults to N
+- Exceptional Item Suffix: Affects on column E, defaults to X
+- Elite Item Suffix: Affects on column I, defaults to E
+- Item Prefix: Affects items with color modified yet not renamed
+
 ## item-names-edit
 
 Your work goes here.
@@ -50,31 +58,13 @@ Rules:
 1. Item name is mandatory.
 2. If Key is present, all items (normally 1) with the same key will be modified.
 3. If Key is missing, all items with the same name will be modified.
-4. If Color is present
-    - blah blah
-5. If Rename is present, ....
-6. Normal, eXceptional, and Elite gears will be appended with `|N` `|X` `|E` respectively.
+4. If Color is present, the item name color will be changed. Item prefix is not affected.
+5. If Rename is present, item prefix will be ignored.
+6. Normal, eXceptional, and Elite gears will be appended with setting values respectively.
 
 ## color-codes
 
 Color codes for your information.
-
-# Commandline args
-
-```
-node index [enUS|zhTW|deDE|esES|frFR|itIT|koKR|plPL|esMX|jaJP|ptBR|ruRU|zhCN]
-```
-
-If no argument is provided, enUS will be used as default.
-
-Examples
-
-```
-node index # mod English only
-node index enUS # mod English only
-node index zhCN # mod Simplified Chinese only
-node index enUS koKR # mod English and Korean
-```
 
 # Roadmap
 

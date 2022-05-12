@@ -4,6 +4,8 @@ const path = require("path")
 const fse = require("fs-extra")
 let xu = xlsx.utils
 
+// util funcs
+
 function stringNull(str) {
     return str === undefined || str === null || str.length === 0
 }
@@ -16,7 +18,7 @@ function stringDefault(str, defaultValue) {
     }
 }
 
-const fp_base_xlsx = "base.xlsx"
+const fp_base_xlsx = "Diablo II.xlsx"
 const fp_item_names = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-names.json"
 const fp_item_name_affixes = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-nameaffixes.json"
 
@@ -54,6 +56,8 @@ for (const lang of targetLanguages.split(",")) {
     }
 }
 
+// combine all json values into one array
+
 let itemNames = xu.sheet_to_json(wb.Sheets[sheetNameItemNames])
 let itemNameAffixes = xu.sheet_to_json(wb.Sheets[sheetNameItemNameAffixes])
 
@@ -80,6 +84,7 @@ for (const e of arr) {
     }
 }
 
+// find entry by enUS name
 function findByEnUS(enUS) {
     let res = arr.filter(e => e.enUS == enUS)
     if (res.length === 0) {
@@ -91,6 +96,7 @@ function findByEnUS(enUS) {
     return res
 }
 
+// find entry by key
 function findByKey(key) {
     let res = arr.filter(e => e.Key == key)
     if (res.length === 0) {
@@ -102,6 +108,15 @@ function findByKey(key) {
     return res
 }
 
+/**
+ * edit entry
+ * @param {string} nameEnUS enUS name
+ * @param {string} key key
+ * @param {string} color yc color code
+ * @param {string} rename the new name
+ * @param {string} level suffix for normal/exceptional/elite items
+ * @returns void
+ */
 function editClone(nameEnUS, key, color, rename, level) {
     if (stringNull(nameEnUS)) {
         return
@@ -144,6 +159,8 @@ for (const row of editWs) {
     editClone(row.Special, row.Key4, row.Color4, row.Rename4)
 }
 
+// write json files
+
 let bom = Buffer.alloc(3)
 bom[0] = 0xEF
 bom[1] = 0xBB
@@ -165,7 +182,7 @@ fs.writeFileSync(fp_item_name_affixes, Buffer.concat([bom, bufferItemNameAffixes
 
 console.log(`[OK] Write json success. Changes langs: ${targetLangs.join(",")}.`)
 
-// deploy
+// deploy json files to your d2r path
 
 const pathD2RPath = path.join(__dirname, "your-d2r-full-path.txt")
 let d2rPath
