@@ -151,7 +151,7 @@ function editClone(nameEnUS, key, color, rename, level) {
     }
 }
 
-let editWs = xu.sheet_to_json(wb.Sheets["item-names-edit"])
+let editWs = xu.sheet_to_json(wb.Sheets["edit"])
 for (const row of editWs) {
     editClone(row.Normal, row.Key1, row.Color1, row.Rename1, normalItemSuffix)
     editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, exceptionalItemSuffix)
