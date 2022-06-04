@@ -1,10 +1,15 @@
 Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
-> A fully customizable item naming mod using excel edits
+> A fully customizable item naming mod using excel edits. Item renaming only, no more shit.
+
+# Environment
+
+- Windows 10 21H2
+- Diablo II Resurrected 1.2.69754
 
 # Installation
 
-## Option 1: Command line
+## Option 1: Command line (Recommended)
 
 1. Install nodejs https://nodejs.org/en/
 2. CD to root of this repo
@@ -19,7 +24,7 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
 # Customization
 
-Open `base.xlsx`
+Open `Diablo II.xlsx`
 
 ## item-names
 
