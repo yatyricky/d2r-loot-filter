@@ -26,15 +26,21 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
 Open `Diablo II.xlsx`
 
-## item-names
+## Sheet: item-names
 
 This sheet is basically a 1:1 spreadsheet representation of D2R `item-names.json` file.
 
-## item-nameaffixes
+```
+# for devs
+use json2xlsx.js to update the sheet
+use casc viewer to update to the latest game data
+```
+
+## Sheet: item-nameaffixes
 
 This sheet is basically a 1:1 spreadsheet representation of D2R `item-nameaffixes.json` file.
 
-## settings
+## Sheet: settings
 
 - Target Languages: The languages the mod will apply to. Options are enUS|zhTW|deDE|esES|frFR|itIT|koKR|plPL|esMX|jaJP|ptBR|ruRU|zhCN. Defaults to enUS
 - Normal Item Suffix: Affects on column A, defaults to N
@@ -42,7 +48,7 @@ This sheet is basically a 1:1 spreadsheet representation of D2R `item-nameaffixe
 - Elite Item Suffix: Affects on column I, defaults to E
 - Item Prefix: Affects items with color modified yet not renamed
 
-## item-names-edit
+## Sheet: edit
 
 Your work goes here.
 
@@ -67,7 +73,7 @@ Rules:
 5. If Rename is present, item prefix will be ignored.
 6. Normal, eXceptional, and Elite gears will be appended with setting values respectively.
 
-## color-codes
+## Sheet: color
 
 Color codes for your information.
 
