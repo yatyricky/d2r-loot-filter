@@ -45,7 +45,6 @@ let targetLanguages = stringDefault(settings["Target Languages"], "enUS")
 let normalItemSuffix = stringDefault(settings["Normal Item Suffix"], "N")
 let exceptionalItemSuffix = stringDefault(settings["Exceptional Item Suffix"], "X")
 let eliteItemSuffix = stringDefault(settings["Elite Item Suffix"], "E")
-let itemPrefix = stringDefault(settings["Item Prefix"], "")
 
 // target lang
 
@@ -118,12 +117,11 @@ function findByKey(key) {
  * edit entry
  * @param {string} nameEnUS enUS name
  * @param {string} key key
- * @param {string} color yc color code
  * @param {string} rename the new name
  * @param {string} level suffix for normal/exceptional/elite items
  * @returns void
  */
-function editClone(nameEnUS, key, color, rename, level) {
+function editClone(nameEnUS, key, rename, level) {
     if (stringNull(nameEnUS)) {
         return
     }
@@ -134,35 +132,26 @@ function editClone(nameEnUS, key, color, rename, level) {
         entries = findByEnUS(nameEnUS)
     }
 
-    color = color || ""
-    rename = rename || ""
     level = level || ""
-    let prefix = itemPrefix
     for (const entry of entries) {
         for (const lang of targetLangs) {
             let name = entry[lang]
 
             if (!stringNull(rename)) {
                 name = stringFormat(rename, name)
-                prefix = ""
             }
 
-            if (stringNull(color)) {
-                prefix = ""
-            }
-
-            name = prefix + color + name + level
-            entry[lang] = name
+            entry[lang] = name + level
         }
     }
 }
 
 let editWs = xu.sheet_to_json(wb.Sheets["edit"])
 for (const row of editWs) {
-    editClone(row.Normal, row.Key1, row.Color1, row.Rename1, normalItemSuffix)
-    editClone(row.Exceptional, row.Key2, row.Color2, row.Rename2, exceptionalItemSuffix)
-    editClone(row.Elite, row.Key3, row.Color3, row.Rename3, eliteItemSuffix)
-    editClone(row.Special, row.Key4, row.Color4, row.Rename4)
+    editClone(row.Normal, row.Key1, row.Rename1, normalItemSuffix)
+    editClone(row.Exceptional, row.Key2, row.Rename2, exceptionalItemSuffix)
+    editClone(row.Elite, row.Key3, row.Rename3, eliteItemSuffix)
+    editClone(row.Special, row.Key4, row.Rename4)
 }
 
 // write json files
