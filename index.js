@@ -18,6 +18,12 @@ function stringDefault(str, defaultValue) {
     }
 }
 
+function stringFormat(template, ...args) {
+    return template.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] !== "undefined" ? args[number] : match
+    })
+}
+
 const fp_base_xlsx = "Diablo II.xlsx"
 const fp_item_names = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-names.json"
 const fp_item_name_affixes = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-nameaffixes.json"
@@ -137,7 +143,7 @@ function editClone(nameEnUS, key, color, rename, level) {
             let name = entry[lang]
 
             if (!stringNull(rename)) {
-                name = rename
+                name = stringFormat(rename, name)
                 prefix = ""
             }
 
