@@ -5,7 +5,7 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 # Environment
 
 - Windows 10 21H2 and later
-- Diablo II Resurrected 1.5.73090
+- Diablo II Resurrected 1.6.74264
 
 # Installation
 
@@ -13,28 +13,33 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
 1. Install nodejs https://nodejs.org/en/
 2. CD to root of this repo
-3. Create a file named `your-d2r-full-path.txt` under the root, enter your full d2r installation path and save. e.g. C:/Users/yatyr/Games/Diablo II Resurrected
+3. Create a file named `your-d2r-full-path.txt` under the root, enter your full d2r installation path and save. e.g. `C:/Users/yatyr/Games/Diablo II Resurrected`
 4. `node index`
-5. enjoy
+5. Add `-mod lootfilter -txt` to your launch options and enjoy
 
 ## Option 2: Copy and Paste
 
 1. Download the latest release
 2. Copy the files as instructed in the original repo https://github.com/AlexisEvo/d2r-loot-filter
 
-# Customization
+# Update Data (Optional)
+
+I regularly update this repo to work with the latest D2R. However in case I'm not around and you really need this, here's how to update the data.
+
+1. Launch CascViewer http://www.zezula.net/en/casc/main.html and open `Diablo II Resurrected` installation folder
+2. Navigate to `data/data/local/lng/strings`
+3. Extract `item-names.json` and `item-nameaffixes.json` to `d2r-loot-filter/lootfilter/lootfilter.mpq/Data/local/lng/strings`
+4. Run `node json2xlsx.js`
+5. Open `d2r-loot-filter/original.xlsx`, copy all sheets to `d2r-loot-filter/Diablo II.xlsx`, overwrite existing sheets with the same name
+6. Save `Diablo II.xlsx` and you are good to go to the next step
+
+# Customization (Optional)
 
 Open `Diablo II.xlsx`
 
 ## Sheet: item-names
 
 This sheet is basically a 1:1 spreadsheet representation of D2R `item-names.json` file.
-
-```
-# for devs
-use json2xlsx.js to update the sheet
-use casc viewer to update to the latest game data
-```
 
 ## Sheet: item-nameaffixes
 
@@ -76,7 +81,3 @@ Rules:
 ## Sheet: color
 
 Color codes for your information.
-
-# Roadmap
-
-[] Simplify installation
