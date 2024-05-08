@@ -13,9 +13,10 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 
 1. Install nodejs https://nodejs.org/en/
 2. CD to root of this repo
-3. Create a file named `your-d2r-full-path.txt` under the root, enter your full d2r installation path and save. e.g. `C:/Users/yatyr/Games/Diablo II Resurrected`
-4. `node index`
-5. Add `-mod lootfilter -txt` to your launch options and enjoy
+3. `npm i` to install dependencies
+4. Create a file named `your-d2r-full-path.txt` under the root, enter your full d2r installation path and save. e.g. `C:/Users/yatyr/Games/Diablo II Resurrected`
+5. `node index` to deploy
+6. Add `-mod lootfilter -txt` to your launch options and enjoy
 
 ## Option 2: Copy and Paste
 
@@ -48,35 +49,31 @@ This sheet is basically a 1:1 spreadsheet representation of D2R `item-nameaffixe
 ## Sheet: settings
 
 - Target Languages: The languages the mod will apply to. Options are enUS|zhTW|deDE|esES|frFR|itIT|koKR|plPL|esMX|jaJP|ptBR|ruRU|zhCN. Defaults to enUS
-- Normal Item Suffix: Affects on column A, defaults to N
-- Exceptional Item Suffix: Affects on column E, defaults to X
-- Elite Item Suffix: Affects on column I, defaults to E
-- Item Prefix: Affects items with color modified yet not renamed
+- Normal Item Suffix: Affects on column A of `Sheet: edit`, defaults to N
+- Exceptional Item Suffix: Affects on column E of `Sheet: edit`, defaults to X
+- Elite Item Suffix: Affects on column I of `Sheet: edit`, defaults to E
 
 ## Sheet: edit
 
 Your work goes here.
 
-It's a simple structure consisting of 4 columns:
+It's a simple structure consisting of 3 columns:
 
 1. enUS name of the item. Key to search an item. Could yield multiple results.
 2. key of the item. The primary key to search for an item. Yields single result.
-3. The color of choice.
-4. Rename the item.
+3. Rename the item with specified pattern where `{0}` represents the original name.
 
 Layout:
 
-1. The first 12 columns are normal, exceptional, and elite items (gears) respectively.
-2. The last 4 columns are misc items.
+1. The first 9 columns are normal, exceptional, and elite items (gears) respectively.
+2. The last 3 columns are misc items.
 
 Rules:
 
 1. Item name is mandatory.
 2. If Key is present, all items (normally 1) with the same key will be modified.
-3. If Key is missing, all items with the same name will be modified.
-4. If Color is present, the item name color will be changed. Item prefix is not affected.
-5. If Rename is present, item prefix will be ignored.
-6. Normal, eXceptional, and Elite gears will be appended with setting values respectively.
+3. If Key is absent, all items with the same name will be modified.
+4. Normal, eXceptional, and Elite gears will be appended with setting values respectively.
 
 ## Sheet: color
 
