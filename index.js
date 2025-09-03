@@ -45,7 +45,6 @@ let targetLanguages = stringDefault(settings["Target Languages"], "enUS")
 let normalItemSuffix = stringDefault(settings["Normal Item Suffix"], "N")
 let exceptionalItemSuffix = stringDefault(settings["Exceptional Item Suffix"], "X")
 let eliteItemSuffix = stringDefault(settings["Elite Item Suffix"], "E")
-let showItemLevel = stringDefault(settings["Show Item Level"], "no") === "yes"
 
 // target lang
 
@@ -90,18 +89,6 @@ for (const e of arr) {
     }
 }
 
-// find entry by enUS name
-function findByEnUS(enUS) {
-    let res = arr.filter(e => e.enUS == enUS)
-    if (res.length === 0) {
-        console.log(`[ERR] Unable to find enUS ${enUS}`)
-        process.exit(1)
-    } else if (res.length > 1) {
-        console.log(`[WARN] Multiple items has the same enUS name: ${enUS} >> ${res.map(e => `${e.Key}@${e.sheet}`).join(",")}`)
-    }
-    return res
-}
-
 // find entry by key
 function findByKey(key) {
     let res = arr.filter(e => e.Key == key)
@@ -116,24 +103,18 @@ function findByKey(key) {
 
 /**
  * edit entry
- * @param {string} nameEnUS enUS name
  * @param {string} key key
  * @param {string} rename the new name
  * @param {string} level suffix for normal/exceptional/elite items
  * @returns void
  */
-function editClone(nameEnUS, key, rename, level) {
-    if (stringNull(nameEnUS)) {
-        return
+function editClone(key, rename, level) {
+    if (stringNull(key)) {
+        return;
     }
-    let entries
-    if (!stringNull(key)) {
-        entries = findByKey(key)
-    } else {
-        entries = findByEnUS(nameEnUS)
-    }
+    let entries = findByKey(key)
 
-    level = level || ""
+    level = level ?? ""
     for (const entry of entries) {
         for (const lang of targetLangs) {
             let name = entry[lang]
@@ -149,42 +130,11 @@ function editClone(nameEnUS, key, rename, level) {
 
 let editWs = xu.sheet_to_json(wb.Sheets["edit"])
 for (const row of editWs) {
-    editClone(row.Normal, row.Key1, row.Rename1, normalItemSuffix)
-    editClone(row.Exceptional, row.Key2, row.Rename2, exceptionalItemSuffix)
-    editClone(row.Elite, row.Key3, row.Rename3, eliteItemSuffix)
-    editClone(row.Special, row.Key4, row.Rename4)
+    editClone(row.Key1, row.Rename1, normalItemSuffix)
+    editClone(row.Key2, row.Rename2, exceptionalItemSuffix)
+    editClone(row.Key3, row.Rename3, eliteItemSuffix)
+    editClone(row.Key4, row.Rename4)
 }
-
-// begin: global stuff
-
-const globalDir = "lootfilter/lootfilter.mpq/Data/global/excel";
-
-function sheet2Tsv(sheetName) {
-    let ws = wb.Sheets[sheetName]
-    if (!ws) {
-        console.log(`[ERR] Sheet not found: ${sheetName}`)
-        return ""
-    }
-    let data = xu.sheet_to_json(ws, { header: 1 })
-    const tsv = data.map(row => row.join("\t")).join("\r\n")
-    fs.writeFileSync(path.join(globalDir, `${sheetName}.txt`), tsv)
-}
-
-if (showItemLevel) {
-    sheet2Tsv("weapons");
-    sheet2Tsv("armor");
-    sheet2Tsv("misc");
-} else {
-    try {
-        fs.unlinkSync(path.join(globalDir, "weapons.txt"));
-        fs.unlinkSync(path.join(globalDir, "armor.txt"));
-        fs.unlinkSync(path.join(globalDir, "misc.txt"));
-    } catch (error) {
-        console.log(`[ERR] Failed to delete files: ${error.message}`);
-    }
-}
-
-// end: global stuff
 
 // write json files
 
@@ -208,6 +158,68 @@ let bufferItemNameAffixes = Buffer.from(JSON.stringify(itemNameAffixes, null, 2)
 fs.writeFileSync(fp_item_name_affixes, Buffer.concat([bom, bufferItemNameAffixes]))
 
 console.log(`[OK] Write json success. Changes langs: ${targetLangs.join(",")}.`)
+
+// begin: show item level
+
+// find all items that needs to show item level
+const needsToShow = new Set();
+
+function addToNeedsToShow(key, showIlvl) {
+    if (stringNull(key)) {
+        return;
+    }
+    if (showIlvl === "yes") {
+        needsToShow.add(key);
+    }
+}
+
+for (const row of editWs) {
+    addToNeedsToShow(row.Key1, row.ShowIlvl1)
+    addToNeedsToShow(row.Key2, row.ShowIlvl2)
+    addToNeedsToShow(row.Key3, row.ShowIlvl3)
+    addToNeedsToShow(row.Key4, row.ShowIlvl4)
+}
+
+const globalDir = "lootfilter/lootfilter.mpq/Data/global/excel";
+
+function generateTsv(sheetName) {
+    const ws = wb.Sheets[sheetName];
+    const range = xu.decode_range(ws["!ref"]);
+    const header = [];
+    for (let c = 0; c <= range.e.c; c++) {
+        const element = ws[xu.encode_cell({ r: 0, c })];
+        if (element == null) {
+            break;
+        }
+        header.push(element.v);
+    }
+
+    const rows = xu.sheet_to_json(ws);
+    for (const e of rows) {
+        if (stringNull(e.ShowLevel)) {
+            continue;
+        }
+        e.ShowLevel = needsToShow.has(e.code) ? "1" : "0";
+    }
+
+    let out = header.join("\t") + "\r\n";
+    for (const e of rows) {
+        if (stringNull(e.name)) {
+            continue;
+        }
+        out += header.map(h => e[h] ?? "").join("\t") + "\r\n";
+    }
+
+    fs.writeFileSync(path.join(globalDir, `${sheetName}.txt`), out, { encoding: "utf-8" });
+    console.log(`[OK] Write ${sheetName}.txt success.`);
+
+}
+
+generateTsv("weapons");
+generateTsv("armor");
+generateTsv("misc");
+
+// end: show item level
 
 // deploy json files to your d2r path
 

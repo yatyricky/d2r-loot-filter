@@ -5,7 +5,7 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 # Environment
 
 - Windows 10 21H2 and later
-- Diablo II Resurrected 1.6.74264
+- Diablo II Resurrected 1.6.84219
 
 # Installation
 
