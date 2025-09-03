@@ -45,6 +45,7 @@ let targetLanguages = stringDefault(settings["Target Languages"], "enUS")
 let normalItemSuffix = stringDefault(settings["Normal Item Suffix"], "N")
 let exceptionalItemSuffix = stringDefault(settings["Exceptional Item Suffix"], "X")
 let eliteItemSuffix = stringDefault(settings["Elite Item Suffix"], "E")
+let showItemLevel = stringDefault(settings["Show Item Level"], "no") === "yes"
 
 // target lang
 
@@ -153,6 +154,37 @@ for (const row of editWs) {
     editClone(row.Elite, row.Key3, row.Rename3, eliteItemSuffix)
     editClone(row.Special, row.Key4, row.Rename4)
 }
+
+// begin: global stuff
+
+const globalDir = "lootfilter/lootfilter.mpq/Data/global/excel";
+
+function sheet2Tsv(sheetName) {
+    let ws = wb.Sheets[sheetName]
+    if (!ws) {
+        console.log(`[ERR] Sheet not found: ${sheetName}`)
+        return ""
+    }
+    let data = xu.sheet_to_json(ws, { header: 1 })
+    const tsv = data.map(row => row.join("\t")).join("\r\n")
+    fs.writeFileSync(path.join(globalDir, `${sheetName}.txt`), tsv)
+}
+
+if (showItemLevel) {
+    sheet2Tsv("weapons");
+    sheet2Tsv("armor");
+    sheet2Tsv("misc");
+} else {
+    try {
+        fs.unlinkSync(path.join(globalDir, "weapons.txt"));
+        fs.unlinkSync(path.join(globalDir, "armor.txt"));
+        fs.unlinkSync(path.join(globalDir, "misc.txt"));
+    } catch (error) {
+        console.log(`[ERR] Failed to delete files: ${error.message}`);
+    }
+}
+
+// end: global stuff
 
 // write json files
 
