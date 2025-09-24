@@ -83,10 +83,10 @@ Runeword82	Melody	1			109	miss									ShaelKoNef	r13	r18	r04				dmg%		50	50	ski
 Runeword83	Memory	1			109	staf									LumIoSolEth	r17	r16	r12	r05			mana%		20	20	red-mag		7	7	ac%		50	50	cast2		33	33	sor		3	3	skill	58	3	3	skill	42	2	2	0
 Runeword84	Mist	1	1	2	D2R Ladder 1	miss									ChamShaelGulThulIth	r32	r13	r25	r10	r06		allskills		3	3	dmg%		325	375	aura	Concentration	8	12	pierce		100	100	vit		24	24	res-all		40	40					0
 Runeword85	Morning																																																	0
-Runeword86	Mystery																																																	0
+Runeword86	Mystery	1			111	swor									AmnTirIthTir	r11	r03	r06	r03			oskill	Teleport	1	2	allskills		2	2	res-all		15	25	mana		60	120	regen-mana		15	15	move2		25	25	light		-1	-3	0
 Runeword87	Myth	1			111	tors									HelAmnNef	r15	r11	r04				hit-skill	Taunt	10	1	gethit-skill	Howl	3	1	bar		2	2	regen		10	10													0
 Runeword88	Nadir	1			109	helm									NefTir	r04	r03					ac%		50	50	ac		10	10	light		-3	-3	charged	264	9	13	gold%		-33	-33	str		5	5					0
-Runeword89	Nature's Kingdom																																																	0
+Runeword89	Nature's Kingdom	1			111	miss									JahFalLoKoZod	r31	r19	r28	r18	r33		aura	Redemption	14	19	hit-skill	Decrepify	20	7	ama		3	6	skilltab	0	3	3	dmg%		420	500	swing2		40	60	knock		1	1	0
 Runeword90	Night																																																	0
 Runeword91	Oath	1			Previously Ladder Only	swor	axe	mace							ShaelPulMalLum	r13	r21	r23	r17			dmg%		210	340	swing1		30	30	hit-skill	Bone Spirit	30	20	charged	IronGolem	14	17	charged	Heart of Wolverine	20	16	abs-mag		10	15	indestruct		1	1	0
 Runeword92	Obedience	1			Previously Ladder Only	pole	spea								HelKoThulEthFal	r15	r18	r10	r05	r19		dmg%		370	370	crush		40	40	kill-skill	enchant	30	21	pierce-fire		25	25	ac		200	300	balance3		40	40	res-all		20	30	0
@@ -154,9 +154,9 @@ Runeword153	Vengeance																																																	0
 Runeword154	Venom	1			109	weap									TalDolMal	r07	r14	r23				dmg-pois	175	312	312	ignore-ac		1	1	charged	83	27	15	charged	92	11	13	manasteal		7	7									0
 Runeword155	Victory																																																	0
 Runeword156	Voice																																																	0
-Runeword157	Void																																																	0
+Runeword157	Void	1			111	axe									AmnEldEthThul	r11	r02	r05	r10			oskill	Teleport	1	2	dmg%		180	220	crush		25	25	deadly		20	30	swing2		20	30	move2		25	25	light		-1	-3	0
 Runeword158	War																																																	0
-Runeword159	Water																																																	0
+Runeword159	Water	1			111	helm									NefThulZod	r04	r10	r33				pierce-immunity-cold		300	300	pierce-cold		15	25	aura	Holy Freeze	15	22	nofreeze		1	1	hit-skill	Frozen Orb	33	27	gethit-skill	Blizzard	33	27	dmg-cold		180	260	0
 Runeword160	Wealth	1			109	tors									LmKoTir	r20	r18	r03				gold%		250	250	mag%		100	100																					0
 Runeword161	Whisper																																																	0
 Runeword162	White	1			109	wand									DolIo	r14	r16					skilltab	7	3	3	red-mag		4	4	cast2		20	20	mana		13	13	skill	68	3	3	skill	84	2	2	skill	69	4	4	0
