@@ -223,192 +223,194 @@ processItemsTsv("misc");
 
 // begin: new rune words
 
-function getSeq(entry) {
-    return `${entry.Rune1}${entry.Rune2}${entry.Rune3}${entry.Rune4}${entry.Rune5}${entry.Rune6}`;
-}
+if (stringDefault(settings["Enable Extra Rune Words"], "no") === "yes") {
+    function getSeq(entry) {
+        return `${entry.Rune1}${entry.Rune2}${entry.Rune3}${entry.Rune4}${entry.Rune5}${entry.Rune6}`;
+    }
 
-const rune2Name = {
-    r01: "El",
-    r02: "Eld",
-    r03: "Tir",
-    r04: "Nef",
-    r05: "Eth",
-    r06: "Ith",
-    r07: "Tal",
-    r08: "Ral",
-    r09: "Ort",
-    r10: "Thul",
-    r11: "Amn",
-    r12: "Sol",
-    r13: "Shael",
-    r14: "Dol",
-    r15: "Hel",
-    r16: "Io",
-    r17: "Lum",
-    r18: "Ko",
-    r19: "Fal",
-    r20: "Lem",
-    r21: "Pul",
-    r22: "Um",
-    r23: "Mal",
-    r24: "Ist",
-    r25: "Gul",
-    r26: "Vex",
-    r27: "Ohm",
-    r28: "Lo",
-    r29: "Sur",
-    r30: "Ber",
-    r31: "Jah",
-    r32: "Cham",
-    r33: "Zod",
-}
+    const rune2Name = {
+        r01: "El",
+        r02: "Eld",
+        r03: "Tir",
+        r04: "Nef",
+        r05: "Eth",
+        r06: "Ith",
+        r07: "Tal",
+        r08: "Ral",
+        r09: "Ort",
+        r10: "Thul",
+        r11: "Amn",
+        r12: "Sol",
+        r13: "Shael",
+        r14: "Dol",
+        r15: "Hel",
+        r16: "Io",
+        r17: "Lum",
+        r18: "Ko",
+        r19: "Fal",
+        r20: "Lem",
+        r21: "Pul",
+        r22: "Um",
+        r23: "Mal",
+        r24: "Ist",
+        r25: "Gul",
+        r26: "Vex",
+        r27: "Ohm",
+        r28: "Lo",
+        r29: "Sur",
+        r30: "Ber",
+        r31: "Jah",
+        r32: "Cham",
+        r33: "Zod",
+    }
 
-function convertRunes2Names(r1, r2, r3, r4, r5, r6) {
-    const runes = [r1, r2, r3, r4, r5, r6];
-    let arr = [];
-    for (const r of runes) {
-        if (stringNull(r) || stringNull(rune2Name[r])) {
-            break;
+    function convertRunes2Names(r1, r2, r3, r4, r5, r6) {
+        const runes = [r1, r2, r3, r4, r5, r6];
+        let arr = [];
+        for (const r of runes) {
+            if (stringNull(r) || stringNull(rune2Name[r])) {
+                break;
+            }
+            arr.push(rune2Name[r]);
         }
-        arr.push(rune2Name[r]);
+        return arr.join("");
     }
-    return arr.join("");
+
+    const baseRws = xu.sheet_to_json(wb.Sheets["runes"]).filter(e => !stringNull(e.Name));
+    const newRws = xu.sheet_to_json(wb.Sheets["new rws"]).filter(e => !stringNull(e.Name) && String(e.complete) === "1");
+    // check conflict
+    for (const e of newRws) {
+        const seq = getSeq(e);
+        if (baseRws.find(b => getSeq(b) === seq)) {
+            console.log(`[ERR] New rune word ${e.Name} has conflict with base rune words. Sequence: ${seq}`);
+            process.exit(1);
+        }
+        const newObj = {
+            ["Name"]: e.Name,
+            ["*Rune Name"]: e["*Rune Name"],
+            ["complete"]: "1",
+            ["firstLadderSeason"]: "",
+            ["lastLadderSeason"]: "",
+            ["*Patch Release"]: "111",
+            ["itype1"]: e.itype1,
+            ["itype2"]: e.itype2,
+            ["itype3"]: e.itype3,
+            ["itype4"]: e.itype4,
+            ["itype5"]: e.itype5,
+            ["itype6"]: e.itype6,
+            ["etype1"]: e.etype1,
+            ["etype2"]: e.etype2,
+            ["etype3"]: e.etype3,
+            ["*RunesUsed"]: convertRunes2Names(e.Rune1, e.Rune2, e.Rune3, e.Rune4, e.Rune5, e.Rune6),
+            ["Rune1"]: e.Rune1,
+            ["Rune2"]: e.Rune2,
+            ["Rune3"]: e.Rune3,
+            ["Rune4"]: e.Rune4,
+            ["Rune5"]: e.Rune5,
+            ["Rune6"]: e.Rune6,
+            ["T1Code1"]: e.T1Code1,
+            ["T1Param1"]: e.T1Param1,
+            ["T1Min1"]: e.T1Min1,
+            ["T1Max1"]: e.T1Max1,
+            ["T1Code2"]: e.T1Code2,
+            ["T1Param2"]: e.T1Param2,
+            ["T1Min2"]: e.T1Min2,
+            ["T1Max2"]: e.T1Max2,
+            ["T1Code3"]: e.T1Code3,
+            ["T1Param3"]: e.T1Param3,
+            ["T1Min3"]: e.T1Min3,
+            ["T1Max3"]: e.T1Max3,
+            ["T1Code4"]: e.T1Code4,
+            ["T1Param4"]: e.T1Param4,
+            ["T1Min4"]: e.T1Min4,
+            ["T1Max4"]: e.T1Max4,
+            ["T1Code5"]: e.T1Code5,
+            ["T1Param5"]: e.T1Param5,
+            ["T1Min5"]: e.T1Min5,
+            ["T1Max5"]: e.T1Max5,
+            ["T1Code6"]: e.T1Code6,
+            ["T1Param6"]: e.T1Param6,
+            ["T1Min6"]: e.T1Min6,
+            ["T1Max6"]: e.T1Max6,
+            ["T1Code7"]: e.T1Code7,
+            ["T1Param7"]: e.T1Param7,
+            ["T1Min7"]: e.T1Min7,
+            ["T1Max7"]: e.T1Max7,
+            ["*eol"]: "0"
+        }
+        const index = baseRws.findIndex(b => b.Name === e.Name);
+        if (index >= 0) {
+            baseRws[index] = newObj;
+        } else {
+            baseRws.push(newObj);
+        }
+    }
+
+    const headers = [
+        "Name",
+        "*Rune Name",
+        "complete",
+        "firstLadderSeason",
+        "lastLadderSeason",
+        "*Patch Release",
+        "itype1",
+        "itype2",
+        "itype3",
+        "itype4",
+        "itype5",
+        "itype6",
+        "etype1",
+        "etype2",
+        "etype3",
+        "*RunesUsed",
+        "Rune1",
+        "Rune2",
+        "Rune3",
+        "Rune4",
+        "Rune5",
+        "Rune6",
+        "T1Code1",
+        "T1Param1",
+        "T1Min1",
+        "T1Max1",
+        "T1Code2",
+        "T1Param2",
+        "T1Min2",
+        "T1Max2",
+        "T1Code3",
+        "T1Param3",
+        "T1Min3",
+        "T1Max3",
+        "T1Code4",
+        "T1Param4",
+        "T1Min4",
+        "T1Max4",
+        "T1Code5",
+        "T1Param5",
+        "T1Min5",
+        "T1Max5",
+        "T1Code6",
+        "T1Param6",
+        "T1Min6",
+        "T1Max6",
+        "T1Code7",
+        "T1Param7",
+        "T1Min7",
+        "T1Max7",
+        "*eol",
+    ];
+
+    let runesContents = headers.join("\t") + "\r\n";
+    for (const e of baseRws) {
+        if (stringNull(e.Name)) {
+            continue;
+        }
+        runesContents += headers.map((field) => e[field] ?? "").join("\t") + "\r\n";
+    }
+
+    fs.writeFileSync(path.join(globalDir, `runes.txt`), runesContents, { encoding: "utf-8" });
+    console.log(`[OK] Write runes.txt success.`);
 }
-
-const baseRws = xu.sheet_to_json(wb.Sheets["runes"]).filter(e => !stringNull(e.Name));
-const newRws = xu.sheet_to_json(wb.Sheets["new rws"]).filter(e => !stringNull(e.Name) && String(e.complete) === "1");
-// check conflict
-for (const e of newRws) {
-    const seq = getSeq(e);
-    if (baseRws.find(b => getSeq(b) === seq)) {
-        console.log(`[ERR] New rune word ${e.Name} has conflict with base rune words. Sequence: ${seq}`);
-        process.exit(1);
-    }
-    const newObj = {
-        ["Name"]: e.Name,
-        ["*Rune Name"]: e["*Rune Name"],
-        ["complete"]: "1",
-        ["firstLadderSeason"]: "",
-        ["lastLadderSeason"]: "",
-        ["*Patch Release"]: "111",
-        ["itype1"]: e.itype1,
-        ["itype2"]: e.itype2,
-        ["itype3"]: e.itype3,
-        ["itype4"]: e.itype4,
-        ["itype5"]: e.itype5,
-        ["itype6"]: e.itype6,
-        ["etype1"]: e.etype1,
-        ["etype2"]: e.etype2,
-        ["etype3"]: e.etype3,
-        ["*RunesUsed"]: convertRunes2Names(e.Rune1, e.Rune2, e.Rune3, e.Rune4, e.Rune5, e.Rune6),
-        ["Rune1"]: e.Rune1,
-        ["Rune2"]: e.Rune2,
-        ["Rune3"]: e.Rune3,
-        ["Rune4"]: e.Rune4,
-        ["Rune5"]: e.Rune5,
-        ["Rune6"]: e.Rune6,
-        ["T1Code1"]: e.T1Code1,
-        ["T1Param1"]: e.T1Param1,
-        ["T1Min1"]: e.T1Min1,
-        ["T1Max1"]: e.T1Max1,
-        ["T1Code2"]: e.T1Code2,
-        ["T1Param2"]: e.T1Param2,
-        ["T1Min2"]: e.T1Min2,
-        ["T1Max2"]: e.T1Max2,
-        ["T1Code3"]: e.T1Code3,
-        ["T1Param3"]: e.T1Param3,
-        ["T1Min3"]: e.T1Min3,
-        ["T1Max3"]: e.T1Max3,
-        ["T1Code4"]: e.T1Code4,
-        ["T1Param4"]: e.T1Param4,
-        ["T1Min4"]: e.T1Min4,
-        ["T1Max4"]: e.T1Max4,
-        ["T1Code5"]: e.T1Code5,
-        ["T1Param5"]: e.T1Param5,
-        ["T1Min5"]: e.T1Min5,
-        ["T1Max5"]: e.T1Max5,
-        ["T1Code6"]: e.T1Code6,
-        ["T1Param6"]: e.T1Param6,
-        ["T1Min6"]: e.T1Min6,
-        ["T1Max6"]: e.T1Max6,
-        ["T1Code7"]: e.T1Code7,
-        ["T1Param7"]: e.T1Param7,
-        ["T1Min7"]: e.T1Min7,
-        ["T1Max7"]: e.T1Max7,
-        ["*eol"]: "0"
-    }
-    const index = baseRws.findIndex(b => b.Name === e.Name);
-    if (index >= 0) {
-        baseRws[index] = newObj;
-    } else {
-        baseRws.push(newObj);
-    }
-}
-
-const headers = [
-    "Name",
-    "*Rune Name",
-    "complete",
-    "firstLadderSeason",
-    "lastLadderSeason",
-    "*Patch Release",
-    "itype1",
-    "itype2",
-    "itype3",
-    "itype4",
-    "itype5",
-    "itype6",
-    "etype1",
-    "etype2",
-    "etype3",
-    "*RunesUsed",
-    "Rune1",
-    "Rune2",
-    "Rune3",
-    "Rune4",
-    "Rune5",
-    "Rune6",
-    "T1Code1",
-    "T1Param1",
-    "T1Min1",
-    "T1Max1",
-    "T1Code2",
-    "T1Param2",
-    "T1Min2",
-    "T1Max2",
-    "T1Code3",
-    "T1Param3",
-    "T1Min3",
-    "T1Max3",
-    "T1Code4",
-    "T1Param4",
-    "T1Min4",
-    "T1Max4",
-    "T1Code5",
-    "T1Param5",
-    "T1Min5",
-    "T1Max5",
-    "T1Code6",
-    "T1Param6",
-    "T1Min6",
-    "T1Max6",
-    "T1Code7",
-    "T1Param7",
-    "T1Min7",
-    "T1Max7",
-    "*eol",
-];
-
-let runesContents = headers.join("\t") + "\r\n";
-for (const e of baseRws) {
-    if (stringNull(e.Name)) {
-        continue;
-    }
-    runesContents += headers.map((field) => e[field] ?? "").join("\t") + "\r\n";
-}
-
-fs.writeFileSync(path.join(globalDir, `runes.txt`), runesContents, { encoding: "utf-8" });
-console.log(`[OK] Write runes.txt success.`);
 
 // end: new rune words
 
