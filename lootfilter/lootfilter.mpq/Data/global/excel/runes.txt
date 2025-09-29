@@ -1,11 +1,11 @@
 Name	*Rune Name	complete	firstLadderSeason	lastLadderSeason	*Patch Release	itype1	itype2	itype3	itype4	itype5	itype6	etype1	etype2	etype3	*RunesUsed	Rune1	Rune2	Rune3	Rune4	Rune5	Rune6	T1Code1	T1Param1	T1Min1	T1Max1	T1Code2	T1Param2	T1Min2	T1Max2	T1Code3	T1Param3	T1Min3	T1Max3	T1Code4	T1Param4	T1Min4	T1Max4	T1Code5	T1Param5	T1Min5	T1Max5	T1Code6	T1Param6	T1Min6	T1Max6	T1Code7	T1Param7	T1Min7	T1Max7	*eol
 Runeword1	Ancients' Pledge	1			109	shld									RalOrtTal	r08	r09	r07				res-cold		30	30	res-all		13	13	ac%		50	50	dmg-to-mana		10	10													0
 Runeword2	Armageddon																																																	0
-Runeword3	Authority	1			111	swor	axe	pole	spea						ZodKoBerChamThulZod	r33	r18	r30	r32	r10	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-cold		300	300	pierce-cold		40	50	deadly		40	40	0
+Runeword3	Authority	1			111	swor	axe	pole	spea						ZodKoBerChamThulZod	r33	r18	r30	r32	r10	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-cold		300	300	pierce-cold		40	50	freeze		1	1	0
 Runeword4	Beast	1			110	axe	scep	hamm							BerTirUmMalLum	r30	r03	r22	r23	r17		swing2		40	40	aura	Fanaticism	9	9	dmg%		240	270	str		25	40	charged	Summon Grizzly	5	13	oskill	Wearbear	3	3	oskill	Shape Shifting	3	3	0
-Runeword5	Beauty	1			111	miss									ChamPulZodUmJah	r32	r21	r33	r22	r31		aura	Conviction	12	12	pierce-cold		45	55	kill-skill	Glacial Spike	100	30	swing2		40	60	dmg%		450	500	pierce		100	100	openwounds		25	25	0
+Runeword5	Beauty	1			111	miss									ChamPulZodUmJah	r32	r21	r33	r22	r31		aura	Conviction	12	12	pierce-cold		45	55	hit-skill	59	100	28	swing2		40	60	dmg%		450	500	pierce		100	100	openwounds		25	25	0
 Runeword6	Black	1			109	club	hamm	mace							ThulIoNef	r10	r16	r04				crush		40	40	dmg%		120	120	swing2		15	15	red-mag		2	2	att		200	200	charged	74	12	4					0
-Runeword7	Blood	1			111	tors									ZodBerSolJah	r33	r30	r12	r31			dmg-min		90	100	dmg-max		150	180	dmg%		225	250	red-dmg%		20	25	res-all		25	35	ac%		350	400	gethit-skill	Bone Armor	35	50	0
+Runeword7	Blood	1			111	tors									ZodBerSolJah	r33	r30	r12	r31			dmg-min		90	100	dmg-max		150	180	dmg%		225	250	red-dmg%		20	25	res-all		25	35	ac%		350	400	hit-skill	82	50	15	0
 Runeword8	Bone	1			111	tors									SolUmUm	r12	r22	r22				hit-skill	Bone Spear	15	10	gethit-skill	Bone Armor	15	10	nec		2	2	mana		100	150													0
 Runeword9	Bramble	1			110	tors									RalOhmSurEth	r08	r27	r29	r05			balance2		50	50	ac		300	300	aura	Thorns	15	21	heal-kill		13	13	extra-pois		25	50	res-pois		100	100	charged	Spirit of Barbs	33	13	0
 Runeword10	Brand	1			Previously Ladder Only	miss									JahLoMalGul	r31	r28	r23	r25			dmg%		260	340	dmg-demon		280	330	hit-skill	Bone Spear	100	18	gethit-skill	Amplify Damage	35	14	knock		1	1	noheal		1	1	explosivearrow		15	15	0
@@ -44,7 +44,7 @@ Runeword42	Fortune																																																	0
 Runeword43	Amity																																																	0
 Runeword44	Fury	1			109	mele									JahGulEth	r31	r25	r05				dmg%		209	209	swing2		40	40	noheal		1	1	openwounds		66	66	lifesteal		6	6	deadly		33	33	skill	147	5	5	0
 Runeword45	Gloom	1			110	tors									FalUmPul	r19	r22	r21				ac%		170	230	res-all		30	30	gethit-skill	Dim Vision	15	3	balance2		10	10	dmg-to-mana		5	5	light		-3	-3	half-freeze		1	1	0
-Runeword46	Glory	1			111	swor	axe	pole	spea						ZodLumBerLoOrtZod	r33	r17	r30	r28	r09	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-light		300	300	pierce-ltng		40	50	deadly		40	40	0
+Runeword46	Glory	1			111	swor	axe	pole	spea						ZodLumBerLoOrtZod	r33	r17	r30	r28	r09	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-light		300	300	pierce-ltng		40	50	slow		33	33	0
 Runeword47	Grief	1			Previously Ladder Only	swor	axe								EthTirLoMalRal	r05	r03	r28	r23	r08		dmg-dem/lvl	15			dmg		340	400	swing3		30	40	hit-skill	Venom	35	15	pierce-pois		20	25	ignore-ac		1	1	heal-kill		10	15	0
 Runeword48	Hand of Justice	1			110	weap									SurChamAmnLo	r29	r32	r11	r28			swing2		33	33	dmg%		280	330	aura	Holy Fire	16	16	levelup-skill	Blaze	100	36	death-skill	Meteor	100	48	ignore-ac		1	1	pierce-fire		20	20	0
 Runeword49	Harmony	1			Previously Ladder Only	miss									TirIthSolKo	r03	r06	r12	r18			dmg%		200	275	dmg-elem		55	160	charged	Revive	25	20	aura	Vigor	10	10	oskill	Valkyrie	2	6	regen-mana		20	20	light		2	2	0
@@ -65,10 +65,10 @@ Runeword63	Jealousy	1			111	helm									ThulOhmZod	r10	r27	r33				pierce-immuni
 Runeword64	Judgment																																																	0
 Runeword65	King's Grace	1			109	swor	scep								AmnRalThul	r11	r08	r10				dmg%		100	100	att		150	150	dmg-demon		100	100	dmg-undead		50	50	att-demon		100	100	att-undead		100	100					0
 Runeword66	Kingslayer	1			110	swor	axe								MalUmGulFal	r23	r22	r25	r19			swing2		30	30	dmg%		230	270	reduce-ac		25	25	crush		33	33	openwounds		25	25	oskill	Vengeance	1	1	gold%		40	40	0
-Runeword67	Knight's Vigil																																																	0
+Runeword67	Knight's Vigil	1			111	helm									JahBerZod	r31	r30	r33				aura	125	14	17	hp%		20	25	gethit-skill	Cyclone Armor	35	50	dmg		100	140	crush		30	30	res-all		50	60	ac%		350	400	0
 Runeword68	Knowledge																																																	0
 Runeword69	Last Wish	1			Previously Ladder Only	swor	hamm	axe							JahMalJahSurJahBer	r31	r23	r31	r29	r31	r30	dmg%		330	375	att-skill	Charged Bolt	20	20	hit-skill	Life Tap	10	18	gethit-skill	Fade	6	11	crush		40	50	mag%/lvl	4			aura	Might	17	17	0
-Runeword70	Law																																																	0
+Runeword70	Law	1			111	pala									ZodShaelChamBer	r33	r13	r32	r30			aura	119	14	17	skilltab	9	2	2	pal		2	2	res-all		75	75	dmg		200	200	crush		30	30	dmg-elem		120	400	0
 Runeword71	Lawbringer	1			Previously Ladder Only	swor	hamm	scep							AmnLemKo	r11	r20	r18				dmg-cold		130	180	dmg-fire		150	210	aura	Sanctuary	16	18	hit-skill	Decrepify	20	15	ac-miss		200	250	rip		1	1	reduce-ac		50	50	0
 Runeword72	Leaf	1			109	staf									TirRal	r03	r08					fireskill		3	3	ac/lvl		16	16	res-cold		33	33	skill	41	3	3	skill	36	3	3	skill	37	3	3					0
 Runeword73	Lightning	1			111	staf									ZodIstLumChamLoOrt	r33	r24	r17	r32	r28	r09	aura	Conviction	19	23	pierce-ltng		40	60	allskills		5	5	cast3		60	70	res-all		75	75	hp%		30	35	mag%		125	125	0
@@ -97,7 +97,7 @@ Runeword96	Patience	1			111	tors									ZodVexRalJah	r33	r26	r08	r31			dmg-fire
 Runeword97	Pattern	1	1	2	D2R Ladder 1	h2h									TalOrtThul	r07	r09	r10				att%		10	10	dmg%		40	80	dmg-fire		12	32	res-all		15	15	str		6	6	dex		6	6	block2		30	30	0
 Runeword98	Peace	1			111	tors									ShaelThulAmn	r13	r10	r11				hit-skill	Valkyrie	2	15	gethit-skill	Slow Missiles	4	5	ama		2	2	oskill	Critical Strike	2	2													0
 Runeword99	Voice of Reason	1			Previously Ladder Only	swor	mace								LemKoElEld	r20	r18	r01	r02			dmg-demon		220	350	dmg-undead		280	300	dmg-cold		100	220	pierce-cold		24	24	hit-skill	Ice Blast	18	20	hit-skill	Frozen Orb	15	13	nofreeze		1	1	0
-Runeword100	Penitence	1			111	swor	axe	pole	spea						ZodIoBerAmnTalZod	r33	r16	r30	r11	r07	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-poison		300	300	pierce-pois		40	50	deadly		40	40	0
+Runeword100	Penitence	1			111	swor	axe	pole	spea						ZodIoBerAmnTalZod	r33	r16	r30	r11	r07	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-poison		300	300	pierce-pois		40	50	noheal		1	1	0
 Runeword101	Peril																																																	0
 Runeword102	Pestilence	1			111	helm									EldTalZod	r02	r07	r33				pierce-immunity-poison		300	300	pierce-pois		15	25	openwounds		33	33	gethit-skill	92	50	55	hit-skill	Lower Resist	20	20									0
 Runeword103	Phoenix	1			Previously Ladder Only	weap	shld								VexVexLoJah	r26	r26	r28	r31			dmg%		350	400	ac-miss		350	400	hit-skill	Firestorm	40	22	levelup-skill	Blaze	100	40	pierce-fire		28	28	aura	Redemption	10	15	abs-fire		15	21	0
@@ -112,7 +112,7 @@ Runeword111	Prowess in Battle																																																	0
 Runeword112	Prudence	1			110	tors									MalTir	r23	r03					ac%		140	170	red-mag		10	10	red-dmg		3	3	res-all		25	35	balance2		25	25	rep-dur	25			light		1	1	0
 Runeword113	Punishment																																																	0
 Runeword114	Purity																																																	0
-Runeword115	Question	1			111	swor	axe	mace							LumIstZodRalSur	r17	r24	r33	r08	r29		oskill	Teleport	1	1	allskills		3	3	pierce-fire		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	enchant	2	6	0
+Runeword115	Question	1			111	swor	axe	mace							LumIstZodRalSur	r17	r24	r33	r08	r29		oskill	Teleport	1	1	allskills		3	3	pierce-fire		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	61	2	6	0
 Runeword116	Radiance	1			109	helm									NefSolIth	r04	r12	r06				light		5	5	enr		10	10	vit		10	10	red-mag		3	3	mana		33	33	ac%		75	75					0
 Runeword117	Rain	1			111	tors									OrtMalIth	r09	r23	r06				hit-skill	Twister	5	15	gethit-skill	Cyclone Armor	5	15	dru		2	2	mana		100	150													0
 Runeword118	Reason																																																	0
@@ -135,28 +135,28 @@ Runeword134	Steel	1			109	swor	axe	mace							TirEl	r03	r01					swing2		25	25	dm
 Runeword135	Still Water																																																	0
 Runeword136	Sting																																																	0
 Runeword137	Stone	1			110	tors									ShaelUmPulLum	r13	r22	r21	r17			ac%		220	260	charged	Clay Golem	16	16	ac-miss		300	300	charged	Molten Boulder	80	16	str		16	16	vit		16	16	balance2		40	40	0
-Runeword138	Storm	1			111	helm									TirOrtZod	r03	r09	r33				pierce-immunity-light		300	300	pierce-ltng		15	25	aura	Holy Shock	15	22	gethit-skill	Nova	100	30	dmg-ltng		1	450									0
+Runeword138	Storm	1			111	helm									TirOrtZod	r03	r09	r33				pierce-immunity-light		300	300	pierce-ltng		15	25	aura	Holy Shock	30	30	gethit-skill	Nova	100	30	dmg-ltng		1	450									0
 Runeword139	Strength	1			109	mele									AmnTir	r11	r03					str		20	20	dmg%		35	35	vit		10	10	crush		25	25													0
 Runeword140	Tempest																																																	0
 Runeword141	Temptation																																																	0
 Runeword142	Terror	1			111	tors									ZodGulUmSur	r33	r25	r22	r29			extra-pois		50	65	res-pois-len		50	50	res-all		25	35	ac%		350	400	allskills		2	2	mag%		75	100	regen-mana		25	25	0
 Runeword143	Thirst	1			111	swor	pole	spea							BerJahZodAmn	r30	r31	r33	r11			aura	Conviction	12	12	pierce-pois		45	55	kill-skill	92	100	30	dmg%		255	325	enr		45	45	openwounds		100	100	dmg		275	325	0
-Runeword144	Thought	1			111	swor	axe	mace							LumIstZodTalBer	r17	r24	r33	r07	r30		oskill	Teleport	1	1	allskills		3	3	pierce-pois		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	Confuse	2	6	0
+Runeword144	Thought	1			111	swor	axe	mace							LumIstZodTalBer	r17	r24	r33	r07	r30		oskill	Teleport	1	1	allskills		3	3	pierce-pois		40	40	cast2		30	30	mag%		50	70	res-all		40	40	extra-pois		20	60	0
 Runeword145	Thunder																																																	0
 Runeword146	Time																																																	0
 Runeword147	Tradition	1			111	miss									JahFalLoKoZod	r31	r19	r28	r18	r33		aura	Redemption	14	19	hit-skill	Decrepify	20	7	ama		3	3	skilltab	0	3	3	dmg%		500	700	swing2		40	60	knock		1	1	0
 Runeword148	Treachery	1			111	tors									ShaelThulLem	r13	r10	r20				hit-skill	Venom	25	15	gethit-skill	Fade	5	15	ass		2	2	swing2		45	45													0
-Runeword149	Trust	1			111	swor	axe	mace							LumIstZodThulCham	r17	r24	r33	r10	r32		oskill	Teleport	1	1	allskills		3	3	pierce-cold		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	Frost Nova	2	6	0
-Runeword150	Truth	1			111	swor	axe	mace							LumIstZodOrtJah	r17	r24	r33	r09	r31		oskill	Teleport	1	1	allskills		3	3	pierce-ltng		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	Static Field	2	6	0
+Runeword149	Trust	1			111	swor	axe	mace							LumIstZodThulCham	r17	r24	r33	r10	r32		oskill	Teleport	1	1	allskills		3	3	pierce-cold		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	65	2	6	0
+Runeword150	Truth	1			111	swor	axe	mace							LumIstZodOrtJah	r17	r24	r33	r09	r31		oskill	Teleport	1	1	allskills		3	3	pierce-ltng		40	40	cast2		30	30	mag%		50	70	res-all		40	40	oskill	63	2	6	0
 Runeword151	Unbending Will	1	1	2	D2R Ladder 1	swor									FalIoIthEldElHel	r19	r16	r06	r02	r01	r15	skilltab	12	3	3	hit-skill	Taunt	18	18	swing2		20	30	dmg%		300	350	red-dmg		8	8	noheal		1	1	lifesteal		8	10	0
 Runeword152	Valor																																																	0
 Runeword153	Vengeance																																																	0
 Runeword154	Venom	1			109	weap									TalDolMal	r07	r14	r23				dmg-pois	175	312	312	ignore-ac		1	1	charged	83	27	15	charged	92	11	13	manasteal		7	7									0
-Runeword155	Victory	1			111	swor	axe	pole	spea						ZodFalBerJahRalZod	r33	r19	r30	r31	r08	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-fire		300	300	pierce-fire		40	50	deadly		40	40	0
+Runeword155	Victory	1			111	swor	axe	pole	spea						ZodFalBerJahRalZod	r33	r19	r30	r31	r08	r33	aura	Might	14	17	dmg%		350	400	dmg		220	260	crush		40	50	pierce-immunity-fire		300	300	pierce-fire		40	50	stupidity		10	10	0
 Runeword156	Voice	1			111	helm									BerChamUm	r30	r32	r22				skill	149	1	3	bar		1	3	red-dmg%		8	12	ac%		250	300	dmg%		180	200	hp%		20	20					0
 Runeword157	Void	1			111	axe									AmnEldEthThul	r11	r02	r05	r10			oskill	Teleport	1	1	dmg		150	180	crush		25	25	swing2		20	30	move2		25	25	light		-1	-3					0
 Runeword158	War	1			111	swor	axe	pole	spea						OhmGulPulEld	r27	r25	r21	r02			aura	Fanaticism	12	15	allskills		1	3	dmg%		300	350	extra-ltng		40	50	swing2		35	40	dmg-ltng		1	360	ignore-ac		1	1	0
-Runeword159	Water	1			111	helm									NefThulZod	r04	r10	r33				pierce-immunity-cold		300	300	pierce-cold		15	25	aura	Holy Freeze	15	22	gethit-skill	Blizzard	100	30	dmg-cold		180	260									0
+Runeword159	Water	1			111	helm									NefThulZod	r04	r10	r33				pierce-immunity-cold		300	300	pierce-cold		15	25	aura	Holy Freeze	30	30	gethit-skill	44	100	60	dmg-cold		240	480	skill	31	6	6					0
 Runeword160	Wealth	1			109	tors									LmKoTir	r20	r18	r03				gold%		250	250	mag%		100	100																					0
 Runeword161	Whisper																																																	0
 Runeword162	White	1			109	wand									DolIo	r14	r16					skilltab	7	3	3	red-mag		4	4	cast2		20	20	mana		13	13	skill	68	3	3	skill	84	2	2	skill	69	4	4	0
