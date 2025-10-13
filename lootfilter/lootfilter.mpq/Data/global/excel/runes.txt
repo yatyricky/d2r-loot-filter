@@ -5,7 +5,7 @@ Runeword3	Authority	1			111	swor	axe	pole	spea						ZodKoBerChamThulZod	r33	r18	
 Runeword4	Beast	1			110	axe	scep	hamm							BerTirUmMalLum	r30	r03	r22	r23	r17		swing2		40	40	aura	Fanaticism	9	9	dmg%		240	270	str		25	40	charged	Summon Grizzly	5	13	oskill	Wearbear	3	3	oskill	Shape Shifting	3	3	0
 Runeword5	Beauty	1			111	miss									ChamPulZodUmJah	r32	r21	r33	r22	r31		aura	Conviction	12	12	pierce-cold		45	55	hit-skill	59	100	28	swing2		40	60	dmg%		450	500	pierce		100	100	openwounds		25	25	0
 Runeword6	Black	1			109	club	hamm	mace							ThulIoNef	r10	r16	r04				crush		40	40	dmg%		120	120	swing2		15	15	red-mag		2	2	att		200	200	charged	74	12	4					0
-Runeword7	Blood	1			111	tors									ZodBerSolJah	r33	r30	r12	r31			dmg-min		90	100	dmg-max		150	180	dmg%		225	250	red-dmg%		20	25	res-all		25	35	ac%		350	400	hit-skill	82	50	15	0
+Runeword7	Blood	1			111	tors									ZodBerSolJah	r33	r30	r12	r31			dmg		90	180	openwounds		100	100	dmg%		225	250	red-dmg%		20	25	res-all		25	35	ac%		350	400	hit-skill	82	50	15	0
 Runeword8	Bone	1			111	tors									SolUmUm	r12	r22	r22				hit-skill	Bone Spear	15	10	gethit-skill	Bone Armor	15	10	nec		2	2	mana		100	150													0
 Runeword9	Bramble	1			110	tors									RalOhmSurEth	r08	r27	r29	r05			balance2		50	50	ac		300	300	aura	Thorns	15	21	heal-kill		13	13	extra-pois		25	50	res-pois		100	100	charged	Spirit of Barbs	33	13	0
 Runeword10	Brand	1			Previously Ladder Only	miss									JahLoMalGul	r31	r28	r23	r25			dmg%		260	340	dmg-demon		280	330	hit-skill	Bone Spear	100	18	gethit-skill	Amplify Damage	35	14	knock		1	1	noheal		1	1	explosivearrow		15	15	0
