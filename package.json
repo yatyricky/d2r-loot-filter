@@ -23,6 +23,6 @@
   "homepage": "https://github.com/yatyricky/d2r-loot-filter#readme",
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
   }
 }
