@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is a mod for D2R that makes it easier to quickly discern which items you would want to pick up, essentially implementing a pseudo loot filter.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,7 +23,6 @@
   },
   "homepage": "https://github.com/yatyricky/d2r-loot-filter#readme",
   "dependencies": {
-    "fs-extra": "^10.1.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
   }
 }

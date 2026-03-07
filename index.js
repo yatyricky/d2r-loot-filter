@@ -1,462 +1,391 @@
-let xlsx = require("xlsx")
-let fs = require("fs")
-const path = require("path")
-const fse = require("fs-extra")
-let xu = xlsx.utils
+import xlsx from "xlsx";
+import * as fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+xlsx.set_fs(fs);
+const xu = xlsx.utils;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // util funcs
 
 function stringNull(str) {
-    return str === undefined || str === null || str.length === 0
+    if (str == null) {
+        return true;
+    }
+    if (typeof str !== "string") {
+        throw new Error(`Expected string but got ${typeof str}`);
+    }
+    return str.length === 0;
 }
 
 function stringDefault(str, defaultValue) {
     if (stringNull(str)) {
-        return defaultValue
+        return defaultValue;
     } else {
-        return str
+        return str;
     }
 }
 
 function stringFormat(template, ...args) {
     return template.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] !== "undefined" ? args[number] : match
-    })
+        return typeof args[number] !== "undefined" ? args[number] : match;
+    });
 }
 
-const fp_base_xlsx = "Diablo II.xlsx"
-const fp_item_names = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-names.json"
-const fp_item_name_affixes = "lootfilter/lootfilter.mpq/Data/local/lng/strings/item-nameaffixes.json"
+const FP_BASE_XLSX = "Diablo II.xlsx";
+const FP_SRC = "game_data/v31/data/data";
+const FP_DEST = "lootfilter/lootfilter.mpq/data";
+const RFP_ITEM_NAMES = "local/lng/strings/item-names.json";
+const RFP_ITEM_NAME_AFFIXES = "local/lng/strings/item-nameaffixes.json";
+const RFP_ARMOR = "global/excel/armor.txt";
+const RFP_LEVELS = "global/excel/levels.txt";
+const RFP_MISC = "global/excel/misc.txt";
+const RFP_WEAPONS = "global/excel/weapons.txt";
 
-const sheetNameItemNames = "item-names"
-const sheetNameItemNameAffixes = "item-nameaffixes"
-const sheetSettings = "settings"
+const wb = xlsx.readFile(path.join(__dirname, FP_BASE_XLSX));
 
-let wb = xlsx.readFile(fp_base_xlsx)
-
-// parse settings
-
-let settingsRaw = xu.sheet_to_json(wb.Sheets[sheetSettings])
-let settings = {}
-for (const setting of settingsRaw) {
-    settings[setting.Property] = setting.Value
-}
-let targetLanguages = stringDefault(settings["Target Languages"], "enUS")
-let normalItemSuffix = stringDefault(settings["Normal Item Suffix"], "N")
-let exceptionalItemSuffix = stringDefault(settings["Exceptional Item Suffix"], "X")
-let eliteItemSuffix = stringDefault(settings["Elite Item Suffix"], "E")
-
-// target lang
-
-let allowedCodes = ["enUS", "zhTW", "deDE", "esES", "frFR", "itIT", "koKR", "plPL", "esMX", "jaJP", "ptBR", "ruRU", "zhCN"]
-
-let targetLangs = []
-
-for (const lang of targetLanguages.split(",")) {
-    if (allowedCodes.includes(lang)) {
-        targetLangs.push(lang)
-    } else {
-        console.log(`[ERR] Unknown lang ${lang}. Expected ${allowedCodes.join("|")}`)
-        process.exit(1)
+function parseConfig() {
+    const configRaw = xu.sheet_to_json(wb.Sheets["Mod-Config"])
+    const config = {}
+    for (const setting of configRaw) {
+        config[setting.Property] = setting.Value
     }
-}
 
-// combine all json values into one array
-
-let itemNames = xu.sheet_to_json(wb.Sheets[sheetNameItemNames])
-let itemNameAffixes = xu.sheet_to_json(wb.Sheets[sheetNameItemNameAffixes])
-
-let arr = []
-
-for (const e of itemNames) {
-    arr.push({ ...e, sheet: sheetNameItemNames })
-}
-
-for (const e of itemNameAffixes) {
-    arr.push({ ...e, sheet: sheetNameItemNameAffixes })
-}
-
-for (const e of arr) {
-    for (const key in e) {
-        if (Object.hasOwnProperty.call(e, key)) {
-            const val = e[key];
-            if (typeof (val) === "string") {
-                if (val.includes("\r\n")) {
-                    e[key] = val.replace(/\r\n/g, "\n")
-                }
+    const allowedCodes = ["enUS", "zhTW", "deDE", "esES", "frFR", "itIT", "koKR", "plPL", "esMX", "jaJP", "ptBR", "ruRU", "zhCN"];
+    return {
+        enableItemNameMod: stringDefault(config["Enable Item Name Mod"], "no") === "yes",
+        targetLanguages: stringDefault(config["Target Languages"], "enUS").split(",").map(s => {
+            const trimmed = s.trim();
+            if (!allowedCodes.includes(trimmed)) {
+                throw new Error(`Unknown language code ${trimmed}. Allowed codes are: ${allowedCodes.join(",")}`);
             }
+            return trimmed;
+        }),
+        normalItemSuffix: stringDefault(config["Normal Item Suffix"], "N"),
+        exceptionalItemSuffix: stringDefault(config["Exceptional Item Suffix"], "X"),
+        eliteItemSuffix: stringDefault(config["Elite Item Suffix"], "E"),
+        enableExtraRuneWords: stringDefault(config["Enable Extra Rune Words"], "no") === "yes",
+        showItemLevel: stringDefault(config["Show Item Level"], "no") === "yes",
+        monsterDensityMultiplier: Number(config["Monster Density Multiplier"] ?? 1),
+        uniqueMonsterMultiplier: Number(config["Unique Monster Multiplier"] ?? 1),
+    };
+}
+
+function parseJson(fp) {
+    let buffer = fs.readFileSync(fp);
+    if (buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+        buffer = buffer.subarray(3);
+    }
+    return JSON.parse(buffer);
+}
+
+function writeJson(fp, data) {
+    const bom = Buffer.alloc(3);
+    bom[0] = 0xEF;
+    bom[1] = 0xBB;
+    bom[2] = 0xBF;
+
+    const buffer = Buffer.from(JSON.stringify(data, null, 2) + "\n");
+    fs.mkdirSync(path.dirname(fp), { recursive: true });
+    fs.writeFileSync(fp, Buffer.concat([bom, buffer]));
+}
+
+function parseTsv(fp) {
+    let buffer = fs.readFileSync(fp);
+    if (buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+        buffer = buffer.subarray(3);
+    }
+    const text = buffer.toString();
+    const aoa = text.split("\r\n").map(line => line.split("\t"));
+    const header = aoa[0];
+    const table = [];
+    for (let i = 1; i < aoa.length; i++) {
+        const line = aoa[i];
+        if (line.length === 0 || stringNull(line[0])) {
+            continue;
         }
+        const obj = {};
+        for (let j = 0; j < header.length; j++) {
+            obj[header[j]] = line[j] ?? "";
+        }
+        table.push(obj);
+    }
+    return { header, table };
+}
+
+function writeTsv(fp, data, withBom) {
+    const { header, table } = data;
+    const lines = [header.join("\t")];
+    for (const row of table) {
+        const line = header.map(h => row[h] ?? "").join("\t");
+        lines.push(line);
+    }
+    const text = lines.join("\r\n") + "\r\n";
+    const bom = Buffer.from([0xEF, 0xBB, 0xBF]);
+    const buffer = Buffer.from(text, "utf8");
+    fs.mkdirSync(path.dirname(fp), { recursive: true });
+    if (withBom) {
+        fs.writeFileSync(fp, Buffer.concat([bom, buffer]));
+    } else {
+        fs.writeFileSync(fp, buffer);
     }
 }
+
+const config = parseConfig();
+const dataItemNames = parseJson(path.join(__dirname, FP_SRC, RFP_ITEM_NAMES));
+const dataItemNameAffixes = parseJson(path.join(__dirname, FP_SRC, RFP_ITEM_NAME_AFFIXES));
+const dataArmor = parseTsv(path.join(__dirname, FP_SRC, RFP_ARMOR));
+const dataWeapons = parseTsv(path.join(__dirname, FP_SRC, RFP_WEAPONS));
+const dataMisc = parseTsv(path.join(__dirname, FP_SRC, RFP_MISC));
+const dataLevels = parseTsv(path.join(__dirname, FP_SRC, RFP_LEVELS));
+
+const edits = {
+    [RFP_ITEM_NAMES]: {
+        table: dataItemNames,
+        keyName: "Key",
+        mods: {},
+    },
+    [RFP_ITEM_NAME_AFFIXES]: {
+        table: dataItemNameAffixes,
+        keyName: "Key",
+        mods: {},
+    },
+    [RFP_ARMOR]: {
+        table: dataArmor.table,
+        header: dataArmor.header,
+        keyName: "code",
+        mods: {},
+    },
+    [RFP_WEAPONS]: {
+        table: dataWeapons.table,
+        header: dataWeapons.header,
+        keyName: "code",
+        mods: {},
+    },
+    [RFP_MISC]: {
+        table: dataMisc.table,
+        header: dataMisc.header,
+        keyName: "code",
+        mods: {},
+    },
+    [RFP_LEVELS]: {
+        table: dataLevels.table,
+        header: dataLevels.header,
+        keyName: "Name",
+        mods: {},
+    }
+};
 
 // find entry by key
-function findByKey(key) {
-    let res = arr.filter(e => e.Key == key)
+function findByKey(rfp, key) {
+    const tab = edits[rfp];
+    if (tab == null) {
+        throw new Error(`Unknown table path ${rfp}`);
+    }
+    const res = tab.table.filter(e => e[tab.keyName] == key)
     if (res.length === 0) {
-        console.log(`[ERR] Unable to find key ${key}`)
-        process.exit(1)
+        throw new Error(`Unable to find ${tab.keyName} ${key}`);
     } else if (res.length > 1) {
-        console.log(`[WARN] Multiple items has the same key: ${key} >> ${res.map(e => `${e.id}@${e.sheet}`).join(",")}`)
+        throw new Error(`Multiple items has the same ${tab.keyName} ${key}`);
     }
-    return res
+    return res[0];
 }
 
-/**
- * edit entry
- * @param {string} key key
- * @param {string} rename the new name
- * @param {string} level suffix for normal/exceptional/elite items
- * @returns void
- */
-function editClone(key, rename, level) {
-    if (stringNull(key)) {
+function recordEdit(tablePath, key, field, value) {
+    if (edits[tablePath] == null) {
+        throw new Error(`Unknown table path ${tablePath}`);
+    }
+    const mods = edits[tablePath].mods;
+    if (mods[key] == null) {
+        mods[key] = {};
+    }
+    if (mods[key][field] != null) {
+        throw new Error(`Duplicate edit for ${tablePath} ${key} ${field}`);
+    }
+    mods[key][field] = value;
+}
+
+function processItemNameMod() {
+    if (!config.enableItemNameMod) {
         return;
     }
-    let entries = findByKey(key)
 
-    level = level ?? ""
-    for (const entry of entries) {
-        for (const lang of targetLangs) {
-            let name = entry[lang]
+    /**
+     * edit entry
+     * @param {string} key key
+     * @param {string} rename the new name
+     * @param {string} level suffix for normal/exceptional/elite items
+     * @returns void
+     */
+    function editClone(key, rename, level) {
+        if (stringNull(key)) {
+            return;
+        }
 
-            if (!stringNull(rename)) {
-                name = stringFormat(rename, name)
+        function tryTable(rfp) {
+            const entry = findByKey(rfp, key);
+
+            for (const lang of config.targetLanguages) {
+                let name = entry[lang];
+
+                if (!stringNull(rename)) {
+                    name = stringFormat(rename, name);
+                }
+
+                if (!stringNull(level)) {
+                    name += level;
+                }
+
+                recordEdit(rfp, key, lang, name);
             }
+        }
 
-            entry[lang] = name + level
+        try {
+            tryTable(RFP_ITEM_NAMES);
+        } catch (error) {
+            tryTable(RFP_ITEM_NAME_AFFIXES);
         }
     }
+
+    const editWs = xu.sheet_to_json(wb.Sheets["Mod-ItemName"]);
+    for (const row of editWs) {
+        editClone(row.Key1, row.Rename1, config.normalItemSuffix);
+        editClone(row.Key2, row.Rename2, config.exceptionalItemSuffix);
+        editClone(row.Key3, row.Rename3, config.eliteItemSuffix);
+        editClone(row.Key4, row.Rename4);
+    }
+
+    console.log("[OK] Process item name mod success.");
 }
 
-let editWs = xu.sheet_to_json(wb.Sheets["edit"])
-for (const row of editWs) {
-    editClone(row.Key1, row.Rename1, normalItemSuffix)
-    editClone(row.Key2, row.Rename2, exceptionalItemSuffix)
-    editClone(row.Key3, row.Rename3, eliteItemSuffix)
-    editClone(row.Key4, row.Rename4)
-}
-
-// write json files
-
-let bom = Buffer.alloc(3)
-bom[0] = 0xEF
-bom[1] = 0xBB
-bom[2] = 0xBF
-
-function stripSheetProp(e) {
-    delete e.sheet
-    return e
-}
-
-itemNames = arr.filter(e => e.sheet === sheetNameItemNames).map(e => stripSheetProp(e))
-itemNameAffixes = arr.filter(e => e.sheet === sheetNameItemNameAffixes).map(e => stripSheetProp(e))
-
-let bufferItemNames = Buffer.from(JSON.stringify(itemNames, null, 2) + "\n")
-fs.writeFileSync(fp_item_names, Buffer.concat([bom, bufferItemNames]))
-
-let bufferItemNameAffixes = Buffer.from(JSON.stringify(itemNameAffixes, null, 2) + "\n")
-fs.writeFileSync(fp_item_name_affixes, Buffer.concat([bom, bufferItemNameAffixes]))
-
-console.log(`[OK] Write json success. Changes langs: ${targetLangs.join(",")}.`)
-
-// begin: show item level
-
-// find all items that needs to show item level
-const needsToShow = new Set();
-
-function addToNeedsToShow(key, showIlvl) {
-    if (stringNull(key)) {
+function processNewRuneWordsMod() {
+    if (!config.enableExtraRuneWords) {
         return;
     }
-    if (showIlvl === "yes") {
-        needsToShow.add(key);
-    }
+
+    console.log("[WARN] Not implemented yet: Enable Extra Rune Words");
 }
 
-for (const row of editWs) {
-    addToNeedsToShow(row.Key1, row.ShowIlvl1)
-    addToNeedsToShow(row.Key2, row.ShowIlvl2)
-    addToNeedsToShow(row.Key3, row.ShowIlvl3)
-    addToNeedsToShow(row.Key4, row.ShowIlvl4)
-}
+function processShowItemLevelMod() {
+    if (!config.showItemLevel) {
+        return;
+    }
 
-const globalDir = "lootfilter/lootfilter.mpq/Data/global/excel";
-
-function processItemsTsv(sheetName) {
-    const ws = wb.Sheets[sheetName];
-    const range = xu.decode_range(ws["!ref"]);
-    const header = [];
-    for (let c = 0; c <= range.e.c; c++) {
-        const element = ws[xu.encode_cell({ r: 0, c })];
-        if (element == null) {
-            break;
+    function showItemLevel(key) {
+        if (stringNull(key)) {
+            return;
         }
-        header.push(element.v);
-    }
 
-    const rows = xu.sheet_to_json(ws);
-    for (const e of rows) {
-        if (stringNull(e.ShowLevel)) {
-            continue;
+        function tryTable(rfp) {
+            findByKey(rfp, key);
+            recordEdit(rfp, key, "ShowLevel", "1");
         }
-        e.ShowLevel = needsToShow.has(e.code) ? "1" : "0";
-    }
 
-    let out = header.join("\t") + "\r\n";
-    for (const e of rows) {
-        if (stringNull(e.name)) {
-            continue;
-        }
-        out += header.map(h => e[h] ?? "").join("\t") + "\r\n";
-    }
-
-    fs.writeFileSync(path.join(globalDir, `${sheetName}.txt`), out, { encoding: "utf-8" });
-    console.log(`[OK] Write ${sheetName}.txt success.`);
-
-}
-
-processItemsTsv("weapons");
-processItemsTsv("armor");
-processItemsTsv("misc");
-
-// end: show item level
-
-// begin: new rune words
-
-if (stringDefault(settings["Enable Extra Rune Words"], "no") === "yes") {
-    function getSeq(entry) {
-        return `${entry.Rune1}${entry.Rune2}${entry.Rune3}${entry.Rune4}${entry.Rune5}${entry.Rune6}`;
-    }
-
-    const rune2Name = {
-        r01: "El",
-        r02: "Eld",
-        r03: "Tir",
-        r04: "Nef",
-        r05: "Eth",
-        r06: "Ith",
-        r07: "Tal",
-        r08: "Ral",
-        r09: "Ort",
-        r10: "Thul",
-        r11: "Amn",
-        r12: "Sol",
-        r13: "Shael",
-        r14: "Dol",
-        r15: "Hel",
-        r16: "Io",
-        r17: "Lum",
-        r18: "Ko",
-        r19: "Fal",
-        r20: "Lem",
-        r21: "Pul",
-        r22: "Um",
-        r23: "Mal",
-        r24: "Ist",
-        r25: "Gul",
-        r26: "Vex",
-        r27: "Ohm",
-        r28: "Lo",
-        r29: "Sur",
-        r30: "Ber",
-        r31: "Jah",
-        r32: "Cham",
-        r33: "Zod",
-    }
-
-    function convertRunes2Names(r1, r2, r3, r4, r5, r6) {
-        const runes = [r1, r2, r3, r4, r5, r6];
-        let arr = [];
-        for (const r of runes) {
-            if (stringNull(r) || stringNull(rune2Name[r])) {
-                break;
+        try {
+            tryTable(RFP_ARMOR);
+        } catch (error) {
+            try {
+                tryTable(RFP_WEAPONS);
+            } catch (error) {
+                tryTable(RFP_MISC);
             }
-            arr.push(rune2Name[r]);
-        }
-        return arr.join("");
-    }
-
-    const baseRws = xu.sheet_to_json(wb.Sheets["runes"]).filter(e => !stringNull(e.Name));
-    const newRws = xu.sheet_to_json(wb.Sheets["new rws"]).filter(e => !stringNull(e.Name) && String(e.complete) === "1");
-    // check conflict
-    for (const e of newRws) {
-        const seq = getSeq(e);
-        if (baseRws.find(b => getSeq(b) === seq)) {
-            console.log(`[ERR] New rune word ${e.Name} has conflict with base rune words. Sequence: ${seq}`);
-            process.exit(1);
-        }
-        const newObj = {
-            ["Name"]: e.Name,
-            ["*Rune Name"]: e["*Rune Name"],
-            ["complete"]: "1",
-            ["firstLadderSeason"]: "",
-            ["lastLadderSeason"]: "",
-            ["*Patch Release"]: "111",
-            ["itype1"]: e.itype1,
-            ["itype2"]: e.itype2,
-            ["itype3"]: e.itype3,
-            ["itype4"]: e.itype4,
-            ["itype5"]: e.itype5,
-            ["itype6"]: e.itype6,
-            ["etype1"]: e.etype1,
-            ["etype2"]: e.etype2,
-            ["etype3"]: e.etype3,
-            ["*RunesUsed"]: convertRunes2Names(e.Rune1, e.Rune2, e.Rune3, e.Rune4, e.Rune5, e.Rune6),
-            ["Rune1"]: e.Rune1,
-            ["Rune2"]: e.Rune2,
-            ["Rune3"]: e.Rune3,
-            ["Rune4"]: e.Rune4,
-            ["Rune5"]: e.Rune5,
-            ["Rune6"]: e.Rune6,
-            ["T1Code1"]: e.T1Code1,
-            ["T1Param1"]: e.T1Param1,
-            ["T1Min1"]: e.T1Min1,
-            ["T1Max1"]: e.T1Max1,
-            ["T1Code2"]: e.T1Code2,
-            ["T1Param2"]: e.T1Param2,
-            ["T1Min2"]: e.T1Min2,
-            ["T1Max2"]: e.T1Max2,
-            ["T1Code3"]: e.T1Code3,
-            ["T1Param3"]: e.T1Param3,
-            ["T1Min3"]: e.T1Min3,
-            ["T1Max3"]: e.T1Max3,
-            ["T1Code4"]: e.T1Code4,
-            ["T1Param4"]: e.T1Param4,
-            ["T1Min4"]: e.T1Min4,
-            ["T1Max4"]: e.T1Max4,
-            ["T1Code5"]: e.T1Code5,
-            ["T1Param5"]: e.T1Param5,
-            ["T1Min5"]: e.T1Min5,
-            ["T1Max5"]: e.T1Max5,
-            ["T1Code6"]: e.T1Code6,
-            ["T1Param6"]: e.T1Param6,
-            ["T1Min6"]: e.T1Min6,
-            ["T1Max6"]: e.T1Max6,
-            ["T1Code7"]: e.T1Code7,
-            ["T1Param7"]: e.T1Param7,
-            ["T1Min7"]: e.T1Min7,
-            ["T1Max7"]: e.T1Max7,
-            ["*eol"]: "0"
-        }
-        const index = baseRws.findIndex(b => b.Name === e.Name);
-        if (index >= 0) {
-            baseRws[index] = newObj;
-        } else {
-            baseRws.push(newObj);
         }
     }
 
-    const headers = [
-        "Name",
-        "*Rune Name",
-        "complete",
-        "firstLadderSeason",
-        "lastLadderSeason",
-        "*Patch Release",
-        "itype1",
-        "itype2",
-        "itype3",
-        "itype4",
-        "itype5",
-        "itype6",
-        "etype1",
-        "etype2",
-        "etype3",
-        "*RunesUsed",
-        "Rune1",
-        "Rune2",
-        "Rune3",
-        "Rune4",
-        "Rune5",
-        "Rune6",
-        "T1Code1",
-        "T1Param1",
-        "T1Min1",
-        "T1Max1",
-        "T1Code2",
-        "T1Param2",
-        "T1Min2",
-        "T1Max2",
-        "T1Code3",
-        "T1Param3",
-        "T1Min3",
-        "T1Max3",
-        "T1Code4",
-        "T1Param4",
-        "T1Min4",
-        "T1Max4",
-        "T1Code5",
-        "T1Param5",
-        "T1Min5",
-        "T1Max5",
-        "T1Code6",
-        "T1Param6",
-        "T1Min6",
-        "T1Max6",
-        "T1Code7",
-        "T1Param7",
-        "T1Min7",
-        "T1Max7",
-        "*eol",
+    const editWs = xu.sheet_to_json(wb.Sheets["Mod-ItemName"]);
+    for (const row of editWs) {
+        showItemLevel(row.Key1);
+        showItemLevel(row.Key2);
+        showItemLevel(row.Key3);
+    }
+
+    const extraShow = [
+        "cm1",
+        "cm2",
+        "cm3",
+        "rin",
+        "amu",
     ];
+    for (const key of extraShow) {
+        showItemLevel(key);
+    }
 
-    let runesContents = headers.join("\t") + "\r\n";
-    for (const e of baseRws) {
-        if (stringNull(e.Name)) {
-            continue;
+    console.log("[OK] Process show item level mod success.");
+}
+
+function processMonsterDensity() {
+    if (config.monsterDensityMultiplier === 1 && config.uniqueMonsterMultiplier === 1) {
+        return;
+    }
+
+    function modValue(entry, field, multiplier) {
+        if (stringNull(entry[field])) {
+            return;
         }
-        runesContents += headers.map((field) => e[field] ?? "").join("\t") + "\r\n";
+
+        const value = String(Math.round(Number(entry[field]) * multiplier));
+        recordEdit(RFP_LEVELS, entry.Name, field, value);
     }
 
-    fs.writeFileSync(path.join(globalDir, `runes.txt`), runesContents, { encoding: "utf-8" });
-    console.log(`[OK] Write runes.txt success.`);
-}
+    for (const entry of dataLevels.table) {
+        modValue(entry, "MonDen", config.monsterDensityMultiplier);
+        modValue(entry, "MonDen(N)", config.monsterDensityMultiplier);
+        modValue(entry, "MonDen(H)", config.monsterDensityMultiplier);
 
-// end: new rune words
-
-// deploy json files to your d2r path
-
-const pathD2RPath = path.join(__dirname, "your-d2r-full-path.txt")
-let d2rPath
-if (fs.existsSync(pathD2RPath)) {
-    if (fs.statSync(pathD2RPath).isFile()) {
-        d2rPath = fs.readFileSync(pathD2RPath).toString().trim()
+        modValue(entry, "MonUMin", config.uniqueMonsterMultiplier);
+        modValue(entry, "MonUMax", config.uniqueMonsterMultiplier);
+        modValue(entry, "MonUMin(N)", config.uniqueMonsterMultiplier);
+        modValue(entry, "MonUMax(N)", config.uniqueMonsterMultiplier);
+        modValue(entry, "MonUMin(H)", config.uniqueMonsterMultiplier);
+        modValue(entry, "MonUMax(H)", config.uniqueMonsterMultiplier);
     }
+
+    console.log("[OK] Process monster density mod success.");
 }
 
-if (stringNull(d2rPath)) {
-    console.log("[ERR] Please enter your d2r path here: " + pathD2RPath)
-    process.exit(1)
-}
+function writeMod() {
+    fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
+    fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
 
-if (!fs.existsSync(d2rPath) || !fs.statSync(d2rPath).isDirectory()) {
-    console.log(`[ERR] Directory not valid ${d2rPath}`)
-    process.exit(1)
-}
-
-const modsDir = path.join(d2rPath, "mods")
-if (fs.existsSync(modsDir)) {
-    if (fs.statSync(modsDir).isFile()) {
-        console.log(`[ERR] Path is not directory ${modsDir}`)
-        process.exit(1)
-    }
-} else {
-    fs.mkdirSync(modsDir)
-}
-
-const modPath = path.join(modsDir, "lootfilter")
-if (fs.existsSync(modPath)) {
-    if (fs.statSync(modPath).isDirectory()) {
-        fs.rmSync(modPath, {
-            recursive: true
-        })
-        fs.mkdirSync(modPath)
-    } else {
-        console.log(`[ERR] Path is not directory ${modPath}`)
-        process.exit(1)
+    for (const [rfp, tab] of Object.entries(edits)) {
+        for (const [key, obj] of Object.entries(tab.mods)) {
+            const entry = findByKey(rfp, key);
+            for (const [k, v] of Object.entries(obj)) {
+                entry[k] = v;
+            }
+        }
+        if (tab.header == null) {
+            writeJson(path.join(__dirname, FP_DEST, rfp), tab.table);
+        } else {
+            writeTsv(path.join(__dirname, FP_DEST, rfp), tab);
+        }
     }
 }
 
-fse.copy(path.join(__dirname, "lootfilter"), modPath)
+function deployMod() {
+    const pathD2RPath = path.join(__dirname, "your-d2r-full-path.txt");
+    if (!fs.existsSync(pathD2RPath)) {
+        throw new Error(`Please enter your D2R path in ${pathD2RPath}`);
+    }
+    const d2rPath = fs.readFileSync(pathD2RPath, "utf-8").trim();
+    if (stringNull(d2rPath) || !fs.existsSync(d2rPath) || !fs.statSync(d2rPath).isDirectory()) {
+        throw new Error(`D2R directory not valid: "${d2rPath}"`);
+    }
 
-console.log("[OK] Deploy mod success. Now add '-mod lootfilter -txt' to your launch options and enjoy.")
+    const src = path.join(__dirname, "lootfilter");
+    const dest = path.join(d2rPath, "mods", "lootfilter");
+
+    fs.rmSync(dest, { recursive: true, force: true });
+    fs.cpSync(src, dest, { recursive: true });
+
+    console.log("[OK] Deploy mod success. Now add '-mod lootfilter -txt' to your launch options and enjoy.");
+}
+
+processItemNameMod();
+processNewRuneWordsMod();
+processShowItemLevelMod();
+processMonsterDensity();
+
+writeMod();
+deployMod();
