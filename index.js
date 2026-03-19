@@ -42,6 +42,7 @@ const RFP_ARMOR = "global/excel/armor.txt";
 const RFP_LEVELS = "global/excel/levels.txt";
 const RFP_MISC = "global/excel/misc.txt";
 const RFP_WEAPONS = "global/excel/weapons.txt";
+const RFP_CUBE_MAIN = "global/excel/cubemain.txt";
 
 const wb = xlsx.readFile(path.join(__dirname, FP_BASE_XLSX));
 
@@ -69,6 +70,7 @@ function parseConfig() {
         showItemLevel: stringDefault(config["Show Item Level"], "no") === "yes",
         monsterDensityMultiplier: Number(config["Monster Density Multiplier"] ?? 1),
         uniqueMonsterMultiplier: Number(config["Unique Monster Multiplier"] ?? 1),
+        enableQoLRecipes: stringDefault(config["Enable QoL Recipes"], "no") === "yes",
     };
 }
 
@@ -139,6 +141,7 @@ const dataArmor = parseTsv(path.join(__dirname, FP_SRC, RFP_ARMOR));
 const dataWeapons = parseTsv(path.join(__dirname, FP_SRC, RFP_WEAPONS));
 const dataMisc = parseTsv(path.join(__dirname, FP_SRC, RFP_MISC));
 const dataLevels = parseTsv(path.join(__dirname, FP_SRC, RFP_LEVELS));
+const dataCubeMain = parseTsv(path.join(__dirname, FP_SRC, RFP_CUBE_MAIN));
 
 const edits = {
     [RFP_ITEM_NAMES]: {
@@ -174,7 +177,13 @@ const edits = {
         header: dataLevels.header,
         keyName: "Name",
         mods: {},
-    }
+    },
+    [RFP_CUBE_MAIN]: {
+        table: dataCubeMain.table,
+        header: dataCubeMain.header,
+        keyName: "description",
+        mods: {},
+    },
 };
 
 // find entry by key
@@ -204,6 +213,23 @@ function recordEdit(tablePath, key, field, value) {
         throw new Error(`Duplicate edit for ${tablePath} ${key} ${field}`);
     }
     mods[key][field] = value;
+}
+
+function recordAdd(tablePath, entry) {
+    const tab = edits[tablePath];
+    if (tab == null) {
+        throw new Error(`Unknown table path ${tablePath}`);
+    }
+    const key = entry[tab.keyName];
+    if (tab.table.find(e => e[tab.keyName] === key)) {
+        throw new Error(`Key already exists for ${tablePath} ${key}`);
+    }
+    tab.table.push(entry);
+    const mods = tab.mods;
+    if (mods[key] != null) {
+        throw new Error(`Duplicate add for ${tablePath} ${key}`);
+    }
+    mods[key] = entry;
 }
 
 function processItemNameMod() {
@@ -344,6 +370,58 @@ function processMonsterDensity() {
     console.log("[OK] Process monster density mod success.");
 }
 
+function processQoLRecipesMod() {
+    if (!config.enableQoLRecipes) {
+        return;
+    }
+
+    const recipes = [
+        { description: "1 El Rune + 1 Normal Torso Armor -> 1 Socketed Torso Armor", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"tors,nor,nos\"", ["input 2"]: "r01", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Eld Rune + 1 Normal Torso Armor -> 2 Socketed Torso Armor", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"tors,nor,nos\"", ["input 2"]: "r02", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "2", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Tir Rune + 1 Normal Torso Armor -> 3 Socketed Torso Armor", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"tors,nor,nos\"", ["input 2"]: "r03", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "3", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "1 Nef Rune + 1 Normal Torso Armor -> 4 Socketed Torso Armor", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"tors,nor,nos\"", ["input 2"]: "r04", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "4", ["mod 1 max"]: "4", ["*eol"]: "0" },
+        { description: "1 El Rune + 1 Normal Weapon -> 1 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r01", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Eld Rune + 1 Normal Weapon -> 2 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r02", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "2", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Tir Rune + 1 Normal Weapon -> 3 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r03", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "3", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "1 Nef Rune + 1 Normal Weapon -> 4 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r04", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "4", ["mod 1 max"]: "4", ["*eol"]: "0" },
+        { description: "1 Eth Rune + 1 Normal Weapon -> 5 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r05", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "5", ["mod 1 max"]: "5", ["*eol"]: "0" },
+        { description: "1 Ith Rune + 1 Normal Weapon -> 6 Socketed Weapon", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"weap,nor,nos\"", ["input 2"]: "r06", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "6", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "1 El Rune + 1 Normal Helm -> 1 Socketed Helm", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"helm,nor,nos\"", ["input 2"]: "r01", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Eld Rune + 1 Normal Helm -> 2 Socketed Helm", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"helm,nor,nos\"", ["input 2"]: "r02", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "2", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Tir Rune + 1 Normal Helm -> 3 Socketed Helm", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"helm,nor,nos\"", ["input 2"]: "r03", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "3", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "1 El Rune + 1 Normal Shield -> 1 Socketed Shield", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"shld,nor,nos\"", ["input 2"]: "r01", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Eld Rune + 1 Normal Shield -> 2 Socketed Shield", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"shld,nor,nos\"", ["input 2"]: "r02", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "2", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Tir Rune + 1 Normal Shield -> 3 Socketed Shield", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"shld,nor,nos\"", ["input 2"]: "r03", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "3", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "1 Nef Rune + 1 Normal Shield -> 4 Socketed Shield", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"shld,nor,nos\"", ["input 2"]: "r04", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "4", ["mod 1 max"]: "4", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Superior Armor -> Larzuk Socketed Superior Armor", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tors,hiq,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "6", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Magic Armor -> Larzuk Socketed Magic Armor", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tors,mag,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Rare Armor -> Larzuk Socketed Rare Armor", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tors,rar,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Unique Armor -> Larzuk Socketed Unique Armor", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tors,uni,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Set Armor -> Larzuk Socketed Set Armor", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tors,set,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Superior Weapon -> Larzuk Socketed Superior Weapon", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"weap,hiq,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "6", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Magic Weapon -> Larzuk Socketed Magic Weapon", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"weap,mag,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Rare Weapon -> Larzuk Socketed Rare Weapon", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"weap,rar,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Unique Weapon -> Larzuk Socketed Unique Weapon", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"weap,uni,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Set Weapon -> Larzuk Socketed Set Weapon", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"weap,set,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Superior Helm -> Larzuk Socketed Superior Helm", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"helm,hiq,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "6", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Magic Helm -> Larzuk Socketed Magic Helm", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"helm,mag,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Rare Helm -> Larzuk Socketed Rare Helm", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"helm,rar,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Unique Helm -> Larzuk Socketed Unique Helm", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"helm,uni,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Set Helm -> Larzuk Socketed Set Helm", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"helm,set,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Superior Shield -> Larzuk Socketed Superior Shield", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"shld,hiq,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "6", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Magic Shield -> Larzuk Socketed Magic Shield", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"shld,mag,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Rare Shield -> Larzuk Socketed Rare Shield", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"shld,rar,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Unique Shield -> Larzuk Socketed Unique Shield", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"shld,uni,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "1 Ort Rune + 1 Jewel + 1 Set Shield -> Larzuk Socketed Set Shield", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"shld,set,nos\"", ["input 2"]: "r09", ["input 3"]: "jew", output: "useitem", ["mod 1"]: "sock", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+    ];
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process QoL recipes mod success.");
+}
+
 function writeMod() {
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
@@ -386,6 +464,7 @@ processItemNameMod();
 processNewRuneWordsMod();
 processShowItemLevelMod();
 processMonsterDensity();
+processQoLRecipesMod();
 
 writeMod();
 deployMod();
