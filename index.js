@@ -99,7 +99,8 @@ function parseTsv(fp) {
         buffer = buffer.subarray(3);
     }
     const text = buffer.toString();
-    const aoa = text.split("\r\n").map(line => line.split("\t"));
+    // Support both Windows (CRLF) and Unix (LF) line endings in source data.
+    const aoa = text.split(/\r?\n/).map(line => line.split("\t"));
     const header = aoa[0];
     const table = [];
     for (let i = 1; i < aoa.length; i++) {
