@@ -263,3 +263,10 @@ Wirt's Leg + Tome of Town Portal -> Portal to The Secret Cow Level	1				0	28				
 1 Ort Rune + 1 Jewel + 1 Rare Shield -> Larzuk Socketed Rare Shield	1				100					3	"shld,rar,nos"	r09	jew					useitem				sock			1	1																																																																															0
 1 Ort Rune + 1 Jewel + 1 Unique Shield -> Larzuk Socketed Unique Shield	1				100					3	"shld,uni,nos"	r09	jew					useitem				sock			1	1																																																																															0
 1 Ort Rune + 1 Jewel + 1 Set Shield -> Larzuk Socketed Set Shield	1				100					3	"shld,set,nos"	r09	jew					useitem				sock			1	1																																																																															0
+Any Unique Item + Scroll of Identity -> Salvage to Twisted Essence of Suffering	1				100					2	"any,uni"	isc						tes																																																																																							0
+Any Set Item + Scroll of Identity -> Salvage to Twisted Essence of Suffering	1				100					2	"any,set"	isc						tes																																																																																							0
+3 Twisted Essence of Suffering -> Charged Essense of Hatred	1				100					3	"tes,qty=3"							ceh																																																																																							0
+3 Charged Essense of Hatred -> Burning Essence of Terror	1				100					3	"ceh,qty=3"							bet																																																																																							0
+3 Burning Essence of Terror -> Festering Essence of Destruction	1				100					3	"bet,qty=3"							fed																																																																																							0
+Any Unique Item + Token of Absolution -> Reforged Unique Item	1				100					2	"any,uni"	toa						usetype,uni			100																																																																																				0
+Any Set Item + Token of Absolution -> Reforged Set Item	1				100					2	"any,set"	toa						usetype,set			100																																																																																				0

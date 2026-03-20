@@ -71,6 +71,7 @@ function parseConfig() {
         monsterDensityMultiplier: Number(config["Monster Density Multiplier"] ?? 1),
         uniqueMonsterMultiplier: Number(config["Unique Monster Multiplier"] ?? 1),
         enableQoLRecipes: stringDefault(config["Enable QoL Recipes"], "no") === "yes",
+        enableReforgeRecipes: stringDefault(config["Enable Reforge Recipes"], "no") === "yes",
     };
 }
 
@@ -423,6 +424,28 @@ function processQoLRecipesMod() {
     console.log("[OK] Process QoL recipes mod success.");
 }
 
+function processReforgeRecipesMod() {
+    if (!config.enableReforgeRecipes) {
+        return;
+    }
+
+    const recipes = [
+        { description: "Any Unique Item + Scroll of Identity -> Salvage to Twisted Essence of Suffering", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,uni\"", ["input 2"]: "isc", output: "tes", ["*eol"]: "0" },
+        { description: "Any Set Item + Scroll of Identity -> Salvage to Twisted Essence of Suffering", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,set\"", ["input 2"]: "isc", output: "tes", ["*eol"]: "0" },
+        { description: "3 Twisted Essence of Suffering -> Charged Essense of Hatred", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tes,qty=3\"", output: "ceh", ["*eol"]: "0" },
+        { description: "3 Charged Essense of Hatred -> Burning Essence of Terror", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"ceh,qty=3\"", output: "bet", ["*eol"]: "0" },
+        { description: "3 Burning Essence of Terror -> Festering Essence of Destruction", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"bet,qty=3\"", output: "fed", ["*eol"]: "0" },
+        { description: "Any Unique Item + Token of Absolution -> Reforged Unique Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,uni\"", ["input 2"]: "toa", output: "usetype,uni", ilvl: "100", ["*eol"]: "0" },
+        { description: "Any Set Item + Token of Absolution -> Reforged Set Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,set\"", ["input 2"]: "toa", output: "usetype,set", ilvl: "100", ["*eol"]: "0" },
+    ];
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process reforge recipes mod success.");
+}
+
 function writeMod() {
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
@@ -466,6 +489,7 @@ processNewRuneWordsMod();
 processShowItemLevelMod();
 processMonsterDensity();
 processQoLRecipesMod();
+processReforgeRecipesMod();
 
 writeMod();
 deployMod();
