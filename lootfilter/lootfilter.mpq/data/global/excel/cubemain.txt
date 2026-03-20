@@ -268,5 +268,5 @@ Any Set Item + Scroll of Identity -> Salvage to Twisted Essence of Suffering	1		
 3 Twisted Essence of Suffering -> Charged Essense of Hatred	1				100					3	"tes,qty=3"							ceh																																																																																							0
 3 Charged Essense of Hatred -> Burning Essence of Terror	1				100					3	"ceh,qty=3"							bet																																																																																							0
 3 Burning Essence of Terror -> Festering Essence of Destruction	1				100					3	"bet,qty=3"							fed																																																																																							0
-Any Unique Item + Token of Absolution -> Reforged Unique Item	1				100					2	"any,uni"	toa						usetype,uni			100																																																																																				0
-Any Set Item + Token of Absolution -> Reforged Set Item	1				100					2	"any,set"	toa						usetype,set			100																																																																																				0
+Any Unique Item + Token of Absolution -> Reforged Unique Item	1				100					2	"any,uni"	toa						useitem,reg	99																																																																																						0
+Any Set Item + Token of Absolution -> Reforged Set Item	1				100					2	"any,set"	toa						useitem,reg	99																																																																																						0

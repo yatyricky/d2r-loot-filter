@@ -435,8 +435,8 @@ function processReforgeRecipesMod() {
         { description: "3 Twisted Essence of Suffering -> Charged Essense of Hatred", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"tes,qty=3\"", output: "ceh", ["*eol"]: "0" },
         { description: "3 Charged Essense of Hatred -> Burning Essence of Terror", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"ceh,qty=3\"", output: "bet", ["*eol"]: "0" },
         { description: "3 Burning Essence of Terror -> Festering Essence of Destruction", enabled: "1", version: "100", numinputs: "3", ["input 1"]: "\"bet,qty=3\"", output: "fed", ["*eol"]: "0" },
-        { description: "Any Unique Item + Token of Absolution -> Reforged Unique Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,uni\"", ["input 2"]: "toa", output: "usetype,uni", ilvl: "100", ["*eol"]: "0" },
-        { description: "Any Set Item + Token of Absolution -> Reforged Set Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,set\"", ["input 2"]: "toa", output: "usetype,set", ilvl: "100", ["*eol"]: "0" },
+        { description: "Any Unique Item + Token of Absolution -> Reforged Unique Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,uni\"", ["input 2"]: "toa", output: "useitem,reg", lvl: "99", ["*eol"]: "0" },
+        { description: "Any Set Item + Token of Absolution -> Reforged Set Item", enabled: "1", version: "100", numinputs: "2", ["input 1"]: "\"any,set\"", ["input 2"]: "toa", output: "useitem,reg", lvl: "99", ["*eol"]: "0" },
     ];
 
     for (const recipe of recipes) {
