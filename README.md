@@ -5,7 +5,7 @@ Original repo goes here https://github.com/AlexisEvo/d2r-loot-filter
 # Environment
 
 - Nodejs v22.13.1
-- Diablo II Resurrected 3.1.92198
+- Diablo II Resurrected 3.2.92777
 
 # Installation
 
