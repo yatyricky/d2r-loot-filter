@@ -71,7 +71,8 @@ function parseConfig() {
         monsterDensityMultiplier: Number(config["Monster Density Multiplier"] ?? 1),
         uniqueMonsterMultiplier: Number(config["Unique Monster Multiplier"] ?? 1),
         enableQoLRecipes: stringDefault(config["Enable QoL Recipes"], "no") === "yes",
-        enableReforgeRecipes: stringDefault(config["Enable Reforge Recipes"], "no") === "yes",
+        enableReforgeRecipes: stringDefault(config["Enable Law of Kulle"], "no") === "yes",
+        enableUpgradeRecipes: stringDefault(config["Enable Hope of Cain"], "no") === "yes",
     };
 }
 
@@ -446,6 +447,41 @@ function processReforgeRecipesMod() {
     console.log("[OK] Process reforge recipes mod success.");
 }
 
+function processUpgradeRecipesMod() {
+    if (!config.enableUpgradeRecipes) {
+        return;
+    }
+
+    const recipes = [
+        { description: "Rare Helm + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Armor + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Weapon + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Shield + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Amulet + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Gloves + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Boots + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Belt + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Helm + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Armor + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Weapon + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Shield + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Amulet + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Gloves + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Boots + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Belt + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+    ];
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process upgrade recipes mod success.");
+}
+
 function writeMod() {
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
@@ -490,6 +526,7 @@ processShowItemLevelMod();
 processMonsterDensity();
 processQoLRecipesMod();
 processReforgeRecipesMod();
+processUpgradeRecipesMod();
 
 writeMod();
 deployMod();
