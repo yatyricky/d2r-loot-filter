@@ -73,6 +73,7 @@ function parseConfig() {
         enableQoLRecipes: stringDefault(config["Enable QoL Recipes"], "no") === "yes",
         enableReforgeRecipes: stringDefault(config["Enable Law of Kulle"], "no") === "yes",
         enableUpgradeRecipes: stringDefault(config["Enable Hope of Cain"], "no") === "yes",
+        enableEtchingOfBulKathos: stringDefault(config["Enable Etching of Bul-Kathos"], "no") === "yes",
     };
 }
 
@@ -482,6 +483,26 @@ function processUpgradeRecipesMod() {
     console.log("[OK] Process upgrade recipes mod success.");
 }
 
+function enableEtchingOfBulKathos() {
+    if (!config.enableEtchingOfBulKathos) {
+        return;
+    }
+
+    const recipes = [
+        { description: "11 Rune + Western Worldstone Shard -> 3 Western Worldstone Shard", enabled: "1", version: "100", numinputs: "12", ["input 1"]: "\"rune,qty=11\"", ["input 2"]: "xa1", output: "xa1", ["output b"]: "xa1", ["output c"]: "xa1", ["*eol"]: "0" },
+        { description: "11 Rune + Eastern Worldstone Shard -> 3 Eastern Worldstone Shard", enabled: "1", version: "100", numinputs: "12", ["input 1"]: "\"rune,qty=11\"", ["input 2"]: "xa2", output: "xa2", ["output b"]: "xa2", ["output c"]: "xa2", ["*eol"]: "0" },
+        { description: "11 Rune + Southern Worldstone Shard -> 3 Southern Worldstone Shard", enabled: "1", version: "100", numinputs: "12", ["input 1"]: "\"rune,qty=11\"", ["input 2"]: "xa3", output: "xa3", ["output b"]: "xa3", ["output c"]: "xa3", ["*eol"]: "0" },
+        { description: "11 Rune + Deep Worldstone Shard -> 3 Deep Worldstone Shard", enabled: "1", version: "100", numinputs: "12", ["input 1"]: "\"rune,qty=11\"", ["input 2"]: "xa4", output: "xa4", ["output b"]: "xa4", ["output c"]: "xa4", ["*eol"]: "0" },
+        { description: "11 Rune + Northern Worldstone Shard -> 3 Northern Worldstone Shard", enabled: "1", version: "100", numinputs: "12", ["input 1"]: "\"rune,qty=11\"", ["input 2"]: "xa5", output: "xa5", ["output b"]: "xa5", ["output c"]: "xa5", ["*eol"]: "0" },
+    ];
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process Etching of Bul-Kathos mod success.");
+}
+
 function writeMod() {
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
@@ -527,6 +548,7 @@ processMonsterDensity();
 processQoLRecipesMod();
 processReforgeRecipesMod();
 processUpgradeRecipesMod();
+enableEtchingOfBulKathos();
 
 writeMod();
 deployMod();
