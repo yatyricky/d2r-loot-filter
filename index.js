@@ -74,6 +74,7 @@ function parseConfig() {
         enableReforgeRecipes: stringDefault(config["Enable Law of Kulle"], "no") === "yes",
         enableUpgradeRecipes: stringDefault(config["Enable Hope of Cain"], "no") === "yes",
         enableEtchingOfBulKathos: stringDefault(config["Enable Etching of Bul-Kathos"], "no") === "yes",
+        enableCaldesannsDespair: stringDefault(config["Enable Caldesann's Despair"], "no") === "yes",
     };
 }
 
@@ -454,26 +455,26 @@ function processUpgradeRecipesMod() {
     }
 
     const recipes = [
-        { description: "Rare Helm + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Armor + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Weapon + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Shield + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Amulet + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Ring + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Ring + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Gloves + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Boots + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Belt + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Helm + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Armor + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Weapon + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Shield + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Amulet + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Ring + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Ring + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Gloves + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Boots + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
-        { description: "Rare Belt + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["plvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Helm + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Armor + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Weapon + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Shield + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Amulet + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Festering Essence of Destruction + Deep Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa4", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Festering Essence of Destruction + Western Worldstone Shard -> Upgraded to Unique Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa1", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Gloves + 3 Festering Essence of Destruction + Eastern Worldstone Shard -> Upgraded to Unique Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa2", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Boots + 3 Festering Essence of Destruction + Southern Worldstone Shard -> Upgraded to Unique Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa3", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Belt + 3 Festering Essence of Destruction + Northern Worldstone Shard -> Upgraded to Unique Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "fed,qty=3", ["input 3"]: "xa5", output: "usetype,uni", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Helm + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Helm", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Armor + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Armor", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Weapon + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Weapon", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Shield + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Shield", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Amulet + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Amulet", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Burning Essence of Terror + Deep Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa4", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Ring + 3 Burning Essence of Terror + Western Worldstone Shard -> Upgraded to Set Ring", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa1", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Gloves + 3 Burning Essence of Terror + Eastern Worldstone Shard -> Upgraded to Set Gloves", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa2", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Boots + 3 Burning Essence of Terror + Southern Worldstone Shard -> Upgraded to Set Boots", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa3", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
+        { description: "Rare Belt + 3 Burning Essence of Terror + Northern Worldstone Shard -> Upgraded to Set Belt", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt,rar\"", ["input 2"]: "bet,qty=3", ["input 3"]: "xa5", output: "usetype,set", ["ilvl"]: "100", ["*eol"]: "0" },
     ];
 
     for (const recipe of recipes) {
@@ -501,6 +502,75 @@ function enableEtchingOfBulKathos() {
     }
 
     console.log("[OK] Process Etching of Bul-Kathos mod success.");
+}
+
+function processCaldesannsDespair() {
+    if (!config.enableCaldesannsDespair) {
+        return;
+    }
+
+    const recipes = [
+        { description: "Helm + Shael + 3 SWS -> Carving FHR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r13", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "balance2", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Helm + Dol + 3 WWS -> Carving FCR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r14", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "cast3", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Helm + Lem + 3 SWS -> Carving EG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r20", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "gold%", ["mod 1 min"]: "1", ["mod 1 max"]: "10", ["*eol"]: "0" },
+        { description: "Helm + Ist + 3 SWS -> Carving MF", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"helm\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r24", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "mag%", ["mod 1 min"]: "1", ["mod 1 max"]: "5", ["*eol"]: "0" },
+
+        { description: "Torso + Nef + 3 NWS -> Carving DEF", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r04", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "ac", ["mod 1 min"]: "10", ["mod 1 max"]: "20", ["*eol"]: "0" },
+        { description: "Torso + Eth + 3 DWS -> Carving LIFE", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r05", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "hp", ["mod 1 min"]: "4", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "Torso + Ith + 3 DWS -> Carving MANA", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r06", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "mana", ["mod 1 min"]: "4", ["mod 1 max"]: "6", ["*eol"]: "0" },
+        { description: "Torso + Io + 3 DWS -> Carving VIT", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r16", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "vit", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Torso + Lum + 3 DWS -> Carving ENR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r17", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "enr", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Torso + Ko + 3 DWS -> Carving DEX", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r18", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "dex", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Torso + Fal + 3 DWS -> Carving STR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"tors\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r19", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "str", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+
+        { description: "Weapon + Shael + 3 WWS -> Carving IAS", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r13", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "swing3", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Weapon + Gul + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r25", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "extra-pois", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Weapon + Vex + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r26", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "extra-fire", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Weapon + Ohm + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r27", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "extra-cold", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Weapon + Lo + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r28", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "extra-ltng", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Weapon + Sur + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r29", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "extra-mag", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Weapon + Ber + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r30", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "dmg%", ["mod 1 min"]: "5", ["mod 1 max"]: "15", ["*eol"]: "0" },
+        { description: "Weapon + Jah + 3 EWS -> Carving DMG", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"weap\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r31", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "dmg", ["mod 1 min"]: "4", ["mod 1 max"]: "10", ["*eol"]: "0" },
+        
+        { description: "Shield + Gul + 3 NWS -> Carving MRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r25", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-pois-max", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Shield + Vex + 3 NWS -> Carving MRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r26", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-fire-max", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Shield + Ohm + 3 NWS -> Carving MRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r27", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-cold-max", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Shield + Lo + 3 NWS -> Carving MRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"shld\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r28", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-ltng-max", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+
+        { description: "Gloves + El + 3 WWS -> Carving AR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r01", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "att", ["mod 1 min"]: "10", ["mod 1 max"]: "20", ["*eol"]: "0" },
+        { description: "Gloves + Eld + 3 NWS -> Carving CBR", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r02", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "block", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Gloves + Lo + 3 WWS -> Carving DS", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r28", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "deadly", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Gloves + Ber + 3 WWS -> Carving CB", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"glov\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r30", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "crush", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+
+        { description: "Boots + Pul + 3 SWS -> Carving FRW", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r21", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "move2", ["mod 1 min"]: "1", ["mod 1 max"]: "5", ["*eol"]: "0" },
+        { description: "Boots + Cham + 3 EWS -> Carving EXP", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"boot\"", ["input 2"]: "xa2,qty=3", ["input 3"]: "r32", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "addxp", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+
+        { description: "Belt + Tir + 3 SWS -> Carving EK", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r03", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "mana-kill", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Belt + Nef + 3 SWS -> Carving LK", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r04", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "heal-kill", ["mod 1 min"]: "1", ["mod 1 max"]: "3", ["*eol"]: "0" },
+        { description: "Belt + Amn + 3 SWS -> Carving LL", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r11", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "lifesteal", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Belt + Sol + 3 SWS -> Carving LM", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"belt\"", ["input 2"]: "xa3,qty=3", ["input 3"]: "r12", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "manasteal", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+
+        { description: "Ring + Gul + 3 WWS -> Carving RPRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r25", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-pois", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Vex + 3 WWS -> Carving RFRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r26", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-fire", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Ohm + 3 WWS -> Carving RCRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r27", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-cold", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Lo + 3 WWS -> Carving RLRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r28", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-ltng", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Sur + 3 WWS -> Carving RMRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r29", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-mag", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Ber + 3 WWS -> Carving RXRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa1,qty=3", ["input 3"]: "r30", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "pierce-dmg", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+        { description: "Ring + Zod + 3 DWS -> Carving AS", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"ring\"", ["input 2"]: "xa4,qty=3", ["input 3"]: "r33", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "allskills", ["mod 1 min"]: "1", ["mod 1 max"]: "1", ["*eol"]: "0" },
+
+        { description: "Amulet + Tal + 3 NWS -> Carving PRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r07", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-pois", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Amulet + Ral + 3 NWS -> Carving FRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r08", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-fire", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Amulet + Ort + 3 NWS -> Carving LRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r09", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-ltng", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Amulet + Thul + 3 NWS -> Carving CRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r10", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-cold", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Amulet + Amn + 3 NWS -> Carving MRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r11", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "res-mag", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+        { description: "Amulet + Sol + 3 NWS -> Carving XRES", enabled: "1", version: "100", numinputs: "5", ["input 1"]: "\"amul\"", ["input 2"]: "xa5,qty=3", ["input 3"]: "r12", output: "useitem", ["ilvl"]: "100", ["mod 1"]: "red-dmg%", ["mod 1 min"]: "1", ["mod 1 max"]: "2", ["*eol"]: "0" },
+    ];
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process Caldesann's Despair mod success.");
 }
 
 function writeMod() {
@@ -549,6 +619,7 @@ processQoLRecipesMod();
 processReforgeRecipesMod();
 processUpgradeRecipesMod();
 enableEtchingOfBulKathos();
+processCaldesannsDespair();
 
 writeMod();
 deployMod();
