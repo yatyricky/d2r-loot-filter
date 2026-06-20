@@ -553,7 +553,7 @@ function processCaldesannsDespair() {
             version: "100",
             numinputs: "5",
             ["input 1"]: `"${cdItemType}"`,
-            ["input 2"]: `${cdRune}`,
+            ["input 2"]: `r${String(cdRune).padStart(2, "0")}`,
             ...xaCombs[cdWorldStone],
             output: "useitem",
             ilvl: "100",
