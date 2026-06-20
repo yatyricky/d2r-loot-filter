@@ -522,6 +522,9 @@ function processCaldesannsDespair() {
         ["445"]: {["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa5"},
     }
 
+    const recipeDupCheck = new Set();
+    const modDupCheck = new Set();
+
     const cdRaw = xu.sheet_to_json(wb.Sheets["Caldesann's Despair"]);
     for (const row of cdRaw) {
         const cdItemType = row.ItemType;
@@ -531,6 +534,18 @@ function processCaldesannsDespair() {
         const cdModParam = row.ModParam;
         const cdModMin = row.ModMin;
         const cdModMax = row.ModMax;
+
+        const recipeKey = `${cdItemType}-${cdWorldStone}-${cdRune}`;
+        if (recipeDupCheck.has(recipeKey)) {
+            throw new Error(`Duplicate recipe for Caldesann's Despair: ${recipeKey}`);
+        }
+        recipeDupCheck.add(recipeKey);
+
+        const modKey = `${cdMod}-${cdModParam}`;
+        if (modDupCheck.has(modKey)) {
+            throw new Error(`Duplicate mod for Caldesann's Despair: ${modKey}`);
+        }
+        modDupCheck.add(modKey);
 
         recipes.push({
             description: `${cdItemType} + ${cdRune} + ${cdWorldStone} -> Carving ${cdMod}`,
