@@ -70,11 +70,12 @@ function parseConfig() {
         showItemLevel: stringDefault(config["Show Item Level"], "no") === "yes",
         monsterDensityMultiplier: Number(config["Monster Density Multiplier"] ?? 1),
         uniqueMonsterMultiplier: Number(config["Unique Monster Multiplier"] ?? 1),
-        enableQoLRecipes: stringDefault(config["Enable QoL Recipes"], "no") === "yes",
+        enableQoLRecipes: stringDefault(config["Enable Skill of Larzuk"], "no") === "yes",
         enableReforgeRecipes: stringDefault(config["Enable Law of Kulle"], "no") === "yes",
         enableUpgradeRecipes: stringDefault(config["Enable Hope of Cain"], "no") === "yes",
         enableEtchingOfBulKathos: stringDefault(config["Enable Etching of Bul-Kathos"], "no") === "yes",
         enableCaldesannsDespair: stringDefault(config["Enable Caldesann's Despair"], "no") === "yes",
+        enableDarknessOfRadament: stringDefault(config["Enable Darkness of Radament"], "no") === "yes",
     };
 }
 
@@ -424,7 +425,7 @@ function processQoLRecipesMod() {
         recordAdd(RFP_CUBE_MAIN, recipe);
     }
 
-    console.log("[OK] Process QoL recipes mod success.");
+    console.log("[OK] Process Skill of Larzuk mod success.");
 }
 
 function processReforgeRecipesMod() {
@@ -446,7 +447,7 @@ function processReforgeRecipesMod() {
         recordAdd(RFP_CUBE_MAIN, recipe);
     }
 
-    console.log("[OK] Process reforge recipes mod success.");
+    console.log("[OK] Process Law of Kulle mod success.");
 }
 
 function processUpgradeRecipesMod() {
@@ -481,10 +482,10 @@ function processUpgradeRecipesMod() {
         recordAdd(RFP_CUBE_MAIN, recipe);
     }
 
-    console.log("[OK] Process upgrade recipes mod success.");
+    console.log("[OK] Process Hope of Cain mod success.");
 }
 
-function enableEtchingOfBulKathos() {
+function processEtchingOfBulKathos() {
     if (!config.enableEtchingOfBulKathos) {
         return;
     }
@@ -512,14 +513,14 @@ function processCaldesannsDespair() {
     const recipes = [];
 
     const xaCombs = {
-        ["111"]: {["input 3"]: '"xa1,qty=3"'},
-        ["222"]: {["input 3"]: '"xa2,qty=3"'},
-        ["333"]: {["input 3"]: '"xa3,qty=3"'},
-        ["555"]: {["input 3"]: '"xa5,qty=3"'},
-        ["441"]: {["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa1"},
-        ["442"]: {["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa2"},
-        ["443"]: {["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa3"},
-        ["445"]: {["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa5"},
+        ["111"]: { ["input 3"]: '"xa1,qty=3"' },
+        ["222"]: { ["input 3"]: '"xa2,qty=3"' },
+        ["333"]: { ["input 3"]: '"xa3,qty=3"' },
+        ["555"]: { ["input 3"]: '"xa5,qty=3"' },
+        ["441"]: { ["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa1" },
+        ["442"]: { ["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa2" },
+        ["443"]: { ["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa3" },
+        ["445"]: { ["input 3"]: '"xa4,qty=2"', ["input 4"]: "xa5" },
     }
 
     const recipeDupCheck = new Set();
@@ -572,6 +573,35 @@ function processCaldesannsDespair() {
     console.log("[OK] Process Caldesann's Despair mod success.");
 }
 
+function processDarknessOfRadament() {
+    if (!config.enableDarknessOfRadament) {
+        return;
+    }
+
+    const pgs = ["gpw", "gpg", "gpr", "gpy", "gpv", "gpb", "skz"];
+    const recipes = [];
+    for (let i = 0; i < pgs.length; i++) {
+        const target = pgs[(i + 1) % pgs.length];
+        recipes.push({
+            description: `3 ${pgs[i]} -> 3 ${target}`,
+            enabled: "1",
+            version: "100",
+            numinputs: "3",
+            ["input 1"]: `"${pgs[i]},qty=3"`,
+            output: `${target}`,
+            ["output b"]: `${target}`,
+            ["output c"]: `${target}`,
+            ["*eol"]: "0",
+        });
+    }
+
+    for (const recipe of recipes) {
+        recordAdd(RFP_CUBE_MAIN, recipe);
+    }
+
+    console.log("[OK] Process Darkness of Radament mod success.");
+}
+
 function writeMod() {
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
     fs.rmSync(path.join(__dirname, FP_DEST), { recursive: true, force: true });
@@ -617,8 +647,9 @@ processMonsterDensity();
 processQoLRecipesMod();
 processReforgeRecipesMod();
 processUpgradeRecipesMod();
-enableEtchingOfBulKathos();
+processEtchingOfBulKathos();
 processCaldesannsDespair();
+processDarknessOfRadament();
 
 writeMod();
 deployMod();
